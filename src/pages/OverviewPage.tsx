@@ -13,13 +13,12 @@ import {
 } from "@/data/mockData";
 
 const COLORS = [
-  "hsl(213, 70%, 50%)", "hsl(142, 60%, 45%)", "hsl(38, 92%, 50%)",
-  "hsl(190, 70%, 50%)", "hsl(260, 60%, 55%)", "hsl(0, 72%, 51%)",
-  "hsl(170, 50%, 45%)", "hsl(320, 60%, 50%)", "hsl(45, 80%, 55%)", "hsl(200, 50%, 40%)"
+  "hsl(0, 0%, 100%)", "hsl(0, 0%, 85%)", "hsl(0, 0%, 70%)",
+  "hsl(0, 0%, 60%)", "hsl(0, 0%, 50%)", "hsl(0, 0%, 40%)",
+  "hsl(0, 0%, 75%)", "hsl(0, 0%, 65%)", "hsl(0, 0%, 55%)", "hsl(0, 0%, 45%)"
 ];
 
 const kpiCards = [
-  { label: "Valor Total do Estoque", value: formatCurrency(kpis.totalStockValue), icon: DollarSign, trend: "+2.1%", trendUp: true, path: "/volumetry" },
   { label: "Total de Materiais", value: formatNumber(kpis.totalMaterials), icon: Package, trend: "+1.8%", trendUp: true, path: "/volumetry" },
   { label: "Valor Parado 120+ dias", value: formatCurrency(kpis.aged120PlusValue), icon: Clock, trend: `${kpis.aged120PlusPercent}%`, trendUp: false, path: "/aging" },
   { label: "Inventário Coberto", value: `${kpis.inventoryPercent}%`, icon: BarChart3, trend: "+3.2%", trendUp: true, path: "/volumetry" },
@@ -45,6 +44,46 @@ export default function OverviewPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {/* Hero Card — Valor Total do Estoque */}
+      <button
+        onClick={() => navigate("/volumetry")}
+        className="w-full text-left glass-card overflow-hidden relative group"
+      >
+        {/* Gradient background accent */}
+        <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 via-transparent to-foreground/[0.02] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-foreground/[0.03] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+        
+        <div className="relative p-6 md:p-8">
+          <div className="flex items-start justify-between mb-1">
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">Valor Total do Estoque</h2>
+              <p className="text-sm text-muted-foreground mt-0.5">Saldo consolidado de todas as linhas de estoque</p>
+            </div>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-secondary text-xs text-muted-foreground">
+              BRL
+            </div>
+          </div>
+
+          <div className="mt-5 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+              <p className="text-4xl md:text-5xl font-extrabold text-foreground tracking-tight">
+                {formatCurrency(kpis.totalStockValue)}
+              </p>
+              <div className="flex items-center gap-4 mt-3">
+                <span className="text-sm text-muted-foreground">
+                  Média mensal: <span className="text-foreground font-medium">{formatCurrency(kpis.totalStockValue * 0.98)}</span> <TrendingUp className="w-3 h-3 inline text-success" />
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-end gap-1">
+              <span className="text-xs text-muted-foreground">Comparado ao mês anterior</span>
+              <span className="text-lg font-bold text-success">+ 2.1%</span>
+            </div>
+          </div>
+        </div>
+      </button>
+
       {/* KPI Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {kpiCards.map((card) => (
