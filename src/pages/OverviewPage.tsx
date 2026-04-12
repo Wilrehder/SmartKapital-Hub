@@ -1,14 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import {
-  AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
+  BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from "recharts";
+import InventoryMapCard from "@/components/InventoryMapCard";
 import {
   DollarSign, Package, Clock, BarChart3, Lock, AlertTriangle,
   MapPin, Bell, TrendingUp, TrendingDown, ArrowRight, Bot
 } from "lucide-react";
 import {
-  kpis, stockDistribution, monthlyTrend, alerts,
+  kpis, stockDistribution, alerts,
   formatCurrency, formatNumber
 } from "@/data/mockData";
 
@@ -27,12 +28,6 @@ const kpiCards = [
   { label: "Sem Posição de Estoque", value: formatNumber(kpis.noPositionMaterials), icon: MapPin, trend: "-5.2%", trendUp: true, path: "/wood" },
   { label: "Alertas Críticos", value: String(kpis.criticalAlerts), icon: Bell, trend: "Este mês", trendUp: false, path: "#" },
 ];
-
-const trendData = monthlyTrend.map(d => ({
-  month: d.month,
-  total: d.value / 1_000_000_000,
-  aged: d.aged / 1_000_000_000,
-}));
 
 const pieData = stockDistribution.slice(0, 6).map(d => ({
   name: d.line.length > 20 ? d.line.slice(0, 20) + "…" : d.line,
@@ -115,36 +110,8 @@ export default function OverviewPage() {
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Trend */}
-        <div className="glass-card p-5 lg:col-span-2">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-foreground">Evolução do Estoque</h3>
-            <span className="text-xs text-muted-foreground">Últimos 9 meses</span>
-          </div>
-          <ResponsiveContainer width="100%" height={260}>
-            <AreaChart data={trendData}>
-              <defs>
-                <linearGradient id="gradTotal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(0, 0%, 100%)" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="hsl(0, 0%, 100%)" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="gradAged" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(0, 0%, 50%)" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="hsl(0, 0%, 50%)" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 16%)" />
-              <XAxis dataKey="month" tick={{ fill: "hsl(0, 0%, 50%)", fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: "hsl(0, 0%, 50%)", fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => `${v}B`} />
-              <Tooltip
-                contentStyle={{ background: "hsl(0, 0%, 10%)", border: "1px solid hsl(0, 0%, 16%)", borderRadius: 8, color: "hsl(0, 0%, 95%)" }}
-                formatter={(v: number) => [`R$ ${v.toFixed(2)} bi`]}
-              />
-              <Area type="monotone" dataKey="total" stroke="hsl(0, 0%, 100%)" fill="url(#gradTotal)" strokeWidth={2} name="Total" />
-              <Area type="monotone" dataKey="aged" stroke="hsl(0, 0%, 50%)" fill="url(#gradAged)" strokeWidth={2} name="Parado 120+" />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+        {/* Inventory Map */}
+        <InventoryMapCard />
 
         {/* Pie */}
         <div className="glass-card p-5">
