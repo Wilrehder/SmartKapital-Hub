@@ -1,4 +1,5 @@
 import { useState } from "react";
+import sgsLogo from "@/assets/sgs-logo.png";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, Clock, Truck, TreePine, AlertTriangle,
