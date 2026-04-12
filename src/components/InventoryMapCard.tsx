@@ -1,5 +1,12 @@
 import { useState } from "react";
 import { MapPin } from "lucide-react";
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  Marker,
+  ZoomableGroup,
+} from "react-simple-maps";
 
 type InventoryStatus = "planned" | "in_progress" | "completed";
 
@@ -12,8 +19,7 @@ interface InventoryLocation {
   stockGroup: string;
   period: string;
   status: InventoryStatus;
-  x: number; // % position on map
-  y: number;
+  coordinates: [number, number]; // [longitude, latitude]
 }
 
 const STATUS_CONFIG: Record<InventoryStatus, { label: string; color: string; dotClass: string }> = {
@@ -23,18 +29,20 @@ const STATUS_CONFIG: Record<InventoryStatus, { label: string; color: string; dot
 };
 
 const mockLocations: InventoryLocation[] = [
-  { id: "1", city: "Três Lagoas", state: "MS", responsible: "Carlos Mendes", unitType: "Fábrica de Celulose", stockGroup: "Celulose", period: "Out/2025", status: "completed", x: 46, y: 58 },
-  { id: "2", city: "Ribas do Rio Pardo", state: "MS", responsible: "Ana Souza", unitType: "Fábrica de Celulose", stockGroup: "Celulose", period: "Nov/2025", status: "in_progress", x: 44, y: 61 },
-  { id: "3", city: "Suzano", state: "SP", responsible: "Roberto Lima", unitType: "Sede Administrativa", stockGroup: "Papel", period: "Set/2025", status: "completed", x: 52, y: 63 },
-  { id: "4", city: "Imperatriz", state: "MA", responsible: "Fernanda Costa", unitType: "Fábrica de Celulose", stockGroup: "Celulose", period: "Dez/2025", status: "planned", x: 39, y: 28 },
-  { id: "5", city: "Aracruz", state: "ES", responsible: "Marcos Oliveira", unitType: "Fábrica de Celulose", stockGroup: "Celulose", period: "Out/2025", status: "completed", x: 60, y: 54 },
-  { id: "6", city: "Açailândia", state: "MA", responsible: "Juliana Pereira", unitType: "Unidade Florestal", stockGroup: "Madeira", period: "Jan/2026", status: "planned", x: 38, y: 26 },
-  { id: "7", city: "Mucuri", state: "BA", responsible: "Paulo Santos", unitType: "Fábrica de Celulose", stockGroup: "Celulose", period: "Nov/2025", status: "completed", x: 58, y: 49 },
-  { id: "8", city: "Limeira", state: "SP", responsible: "Beatriz Alves", unitType: "Fábrica de Papel", stockGroup: "Papel", period: "Dez/2025", status: "planned", x: 50, y: 62 },
-  { id: "9", city: "Jacareí", state: "SP", responsible: "Diego Martins", unitType: "Fábrica de Papel", stockGroup: "Papel", period: "Out/2025", status: "completed", x: 53, y: 62 },
-  { id: "10", city: "São Miguel Arcanjo", state: "SP", responsible: "Luciana Ribeiro", unitType: "Unidade Florestal", stockGroup: "Madeira", period: "Nov/2025", status: "in_progress", x: 49, y: 64 },
-  { id: "11", city: "Arujá", state: "SP", responsible: "Thiago Nunes", unitType: "Centro de Distribuição", stockGroup: "MRO", period: "Jan/2026", status: "planned", x: 53, y: 63 },
+  { id: "1", city: "Três Lagoas", state: "MS", responsible: "Carlos Mendes", unitType: "Fábrica de Celulose", stockGroup: "Celulose", period: "Out/2025", status: "completed", coordinates: [-51.68, -20.75] },
+  { id: "2", city: "Ribas do Rio Pardo", state: "MS", responsible: "Ana Souza", unitType: "Fábrica de Celulose", stockGroup: "Celulose", period: "Nov/2025", status: "in_progress", coordinates: [-53.76, -20.44] },
+  { id: "3", city: "Suzano", state: "SP", responsible: "Roberto Lima", unitType: "Sede Administrativa", stockGroup: "Papel", period: "Set/2025", status: "completed", coordinates: [-46.31, -23.54] },
+  { id: "4", city: "Imperatriz", state: "MA", responsible: "Fernanda Costa", unitType: "Fábrica de Celulose", stockGroup: "Celulose", period: "Dez/2025", status: "planned", coordinates: [-47.47, -5.52] },
+  { id: "5", city: "Aracruz", state: "ES", responsible: "Marcos Oliveira", unitType: "Fábrica de Celulose", stockGroup: "Celulose", period: "Out/2025", status: "completed", coordinates: [-40.27, -19.82] },
+  { id: "6", city: "Açailândia", state: "MA", responsible: "Juliana Pereira", unitType: "Unidade Florestal", stockGroup: "Madeira", period: "Jan/2026", status: "planned", coordinates: [-47.05, -4.95] },
+  { id: "7", city: "Mucuri", state: "BA", responsible: "Paulo Santos", unitType: "Fábrica de Celulose", stockGroup: "Celulose", period: "Nov/2025", status: "completed", coordinates: [-39.55, -18.08] },
+  { id: "8", city: "Limeira", state: "SP", responsible: "Beatriz Alves", unitType: "Fábrica de Papel", stockGroup: "Papel", period: "Dez/2025", status: "planned", coordinates: [-47.40, -22.56] },
+  { id: "9", city: "Jacareí", state: "SP", responsible: "Diego Martins", unitType: "Fábrica de Papel", stockGroup: "Papel", period: "Out/2025", status: "completed", coordinates: [-45.97, -23.30] },
+  { id: "10", city: "São Miguel Arcanjo", state: "SP", responsible: "Luciana Ribeiro", unitType: "Unidade Florestal", stockGroup: "Madeira", period: "Nov/2025", status: "in_progress", coordinates: [-47.99, -23.88] },
+  { id: "11", city: "Arujá", state: "SP", responsible: "Thiago Nunes", unitType: "Centro de Distribuição", stockGroup: "MRO", period: "Jan/2026", status: "planned", coordinates: [-46.32, -23.40] },
 ];
+
+const BRAZIL_TOPO_URL = "https://cdn.jsdelivr.net/npm/brazilian-geo-data@1.0.0/geo/br-states.json";
 
 export default function InventoryMapCard() {
   const [hovered, setHovered] = useState<string | null>(null);
@@ -58,63 +66,83 @@ export default function InventoryMapCard() {
 
       <div className="flex flex-col lg:flex-row gap-4">
         {/* Map */}
-        <div className="relative flex-1 min-h-[320px] rounded-lg bg-secondary/30 border border-border/50 overflow-hidden">
-          {/* Simplified Brazil SVG */}
-          <svg viewBox="0 0 100 100" className="w-full h-full opacity-20" preserveAspectRatio="xMidYMid meet">
-            <path
-              d="M30,10 Q25,15 28,20 L26,25 Q22,28 25,32 L23,38 Q20,42 22,48 L25,52 Q28,55 30,58 L32,62 Q30,68 33,72 L38,75 Q42,78 45,80 L48,82 Q52,80 55,78 L58,74 Q62,70 60,65 L62,60 Q65,55 63,50 L65,45 Q68,40 65,35 L60,30 Q55,25 52,22 L48,18 Q44,14 40,12 L35,10 Q32,9 30,10 Z"
-              fill="hsl(0, 0%, 30%)"
-              stroke="hsl(0, 0%, 25%)"
-              strokeWidth="0.5"
-            />
-          </svg>
-
-          {/* Markers */}
-          {mockLocations.map((loc) => {
-            const config = STATUS_CONFIG[loc.status];
-            const isHovered = hovered === loc.id;
-            return (
-              <div
-                key={loc.id}
-                className="absolute z-10"
-                style={{ left: `${loc.x}%`, top: `${loc.y}%`, transform: "translate(-50%, -50%)" }}
-                onMouseEnter={() => setHovered(loc.id)}
-                onMouseLeave={() => setHovered(null)}
-              >
-                {/* Pulse ring for in_progress */}
-                {loc.status === "in_progress" && (
-                  <div
-                    className="absolute inset-0 rounded-full animate-ping opacity-30"
-                    style={{ background: config.color, width: 14, height: 14, top: -1, left: -1 }}
+        <div className="relative flex-1 min-h-[360px] rounded-lg bg-secondary/30 border border-border/50 overflow-hidden">
+          <ComposableMap
+            projection="geoMercator"
+            projectionConfig={{
+              scale: 580,
+              center: [-54, -15],
+            }}
+            style={{ width: "100%", height: "100%" }}
+          >
+            <Geographies geography={BRAZIL_TOPO_URL}>
+              {({ geographies }) =>
+                geographies.map((geo) => (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    fill="hsl(0, 0%, 18%)"
+                    stroke="hsl(0, 0%, 25%)"
+                    strokeWidth={0.5}
+                    style={{
+                      default: { outline: "none" },
+                      hover: { fill: "hsl(0, 0%, 22%)", outline: "none" },
+                      pressed: { outline: "none" },
+                    }}
                   />
-                )}
-                <div
-                  className="w-3 h-3 rounded-full border-2 border-background cursor-pointer transition-transform hover:scale-150"
-                  style={{ background: config.color }}
-                />
-                {/* Tooltip */}
-                {isHovered && (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-3 rounded-lg bg-card border border-border shadow-xl z-50 text-xs space-y-1.5 pointer-events-none">
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-foreground">{loc.city} - {loc.state}</span>
-                      <span
-                        className="px-1.5 py-0.5 rounded text-[10px] font-medium"
-                        style={{ background: `${config.color}22`, color: config.color }}
-                      >
-                        {config.label}
-                      </span>
-                    </div>
-                    <div className="border-t border-border pt-1.5 space-y-1 text-muted-foreground">
-                      <p><span className="text-foreground/70">Responsável:</span> {loc.responsible}</p>
-                      <p><span className="text-foreground/70">Tipo:</span> {loc.unitType}</p>
-                      <p><span className="text-foreground/70">Grupo:</span> {loc.stockGroup}</p>
-                      <p><span className="text-foreground/70">Período:</span> {loc.period}</p>
-                    </div>
-                  </div>
-                )}
+                ))
+              }
+            </Geographies>
+
+            {mockLocations.map((loc) => {
+              const config = STATUS_CONFIG[loc.status];
+              return (
+                <Marker
+                  key={loc.id}
+                  coordinates={loc.coordinates}
+                  onMouseEnter={() => setHovered(loc.id)}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  {loc.status === "in_progress" && (
+                    <circle r={8} fill={config.color} opacity={0.3} className="animate-ping" />
+                  )}
+                  <circle
+                    r={5}
+                    fill={config.color}
+                    stroke="hsl(0, 0%, 7%)"
+                    strokeWidth={2}
+                    cursor="pointer"
+                  />
+                </Marker>
+              );
+            })}
+          </ComposableMap>
+
+          {/* Tooltips rendered as HTML overlays */}
+          {hovered && (() => {
+            const loc = mockLocations.find(l => l.id === hovered);
+            if (!loc) return null;
+            const config = STATUS_CONFIG[loc.status];
+            return (
+              <div className="absolute top-4 left-4 w-56 p-3 rounded-lg bg-card border border-border shadow-xl z-50 text-xs space-y-1.5 pointer-events-none">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-foreground">{loc.city} - {loc.state}</span>
+                  <span
+                    className="px-1.5 py-0.5 rounded text-[10px] font-medium"
+                    style={{ background: `${config.color}22`, color: config.color }}
+                  >
+                    {config.label}
+                  </span>
+                </div>
+                <div className="border-t border-border pt-1.5 space-y-1 text-muted-foreground">
+                  <p><span className="text-foreground/70">Responsável:</span> {loc.responsible}</p>
+                  <p><span className="text-foreground/70">Tipo:</span> {loc.unitType}</p>
+                  <p><span className="text-foreground/70">Grupo:</span> {loc.stockGroup}</p>
+                  <p><span className="text-foreground/70">Período:</span> {loc.period}</p>
+                </div>
               </div>
             );
-          })}
+          })()}
         </div>
 
         {/* Summary */}
