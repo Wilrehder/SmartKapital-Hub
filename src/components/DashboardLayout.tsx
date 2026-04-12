@@ -33,7 +33,7 @@ export default function DashboardLayout() {
       )}>
         {/* Logo */}
         <div className="flex items-center gap-3 px-4 h-16 border-b border-border">
-          <img src="/favicon.ico" alt="Smart Kapital Hub" className="w-14 h-14 flex-shrink-0" />
+          <img src="/favicon.ico" alt="Smart Kapital Hub" className="w-20 h-20 flex-shrink-0" />
           {!collapsed && (
             <span className="font-bold text-foreground text-lg tracking-tight">
               Smart <span className="gradient-text">Kapital Hub</span>
