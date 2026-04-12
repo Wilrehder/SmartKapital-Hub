@@ -155,7 +155,7 @@ export default function OverviewPage() {
                 {pieData.map((_, i) => <Cell key={i} fill={COLORS[i]} />)}
               </Pie>
               <Tooltip
-                contentStyle={{ background: "hsl(220, 18%, 12%)", border: "1px solid hsl(220, 14%, 18%)", borderRadius: 8, color: "hsl(210, 20%, 95%)" }}
+                contentStyle={{ background: "hsl(0, 0%, 10%)", border: "1px solid hsl(0, 0%, 16%)", borderRadius: 8, color: "hsl(0, 0%, 95%)" }}
                 formatter={(v: number) => [`${v}%`]}
               />
             </PieChart>
@@ -228,11 +228,11 @@ export default function OverviewPage() {
         <h3 className="font-semibold text-foreground mb-4">Valor por Linha de Estoque</h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={stockDistribution.map(d => ({ ...d, valueBi: d.value / 1_000_000_000 }))} layout="vertical">
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 14%, 18%)" horizontal={false} />
-            <XAxis type="number" tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `${v}B`} />
-            <YAxis type="category" dataKey="line" width={180} tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 11 }} axisLine={false} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 16%)" horizontal={false} />
+            <XAxis type="number" tick={{ fill: "hsl(0, 0%, 50%)", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => `${v}B`} />
+            <YAxis type="category" dataKey="line" width={180} tick={{ fill: "hsl(0, 0%, 50%)", fontSize: 11 }} axisLine={false} tickLine={false} />
             <Tooltip
-              contentStyle={{ background: "hsl(220, 18%, 12%)", border: "1px solid hsl(220, 14%, 18%)", borderRadius: 8, color: "hsl(210, 20%, 95%)" }}
+              contentStyle={{ background: "hsl(0, 0%, 10%)", border: "1px solid hsl(0, 0%, 16%)", borderRadius: 8, color: "hsl(0, 0%, 95%)" }}
               formatter={(v: number) => [`R$ ${v.toFixed(2)} bi`]}
             />
             <Bar dataKey="valueBi" name="Valor" radius={[0, 4, 4, 0]}>
