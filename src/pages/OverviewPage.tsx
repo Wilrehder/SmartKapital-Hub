@@ -125,23 +125,23 @@ export default function OverviewPage() {
             <AreaChart data={trendData}>
               <defs>
                 <linearGradient id="gradTotal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(213, 70%, 50%)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(213, 70%, 50%)" stopOpacity={0} />
+                  <stop offset="5%" stopColor="hsl(0, 0%, 100%)" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="hsl(0, 0%, 100%)" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="gradAged" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(0, 72%, 51%)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(0, 72%, 51%)" stopOpacity={0} />
+                  <stop offset="5%" stopColor="hsl(0, 0%, 50%)" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="hsl(0, 0%, 50%)" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 14%, 18%)" />
-              <XAxis dataKey="month" tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => `${v}B`} />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 16%)" />
+              <XAxis dataKey="month" tick={{ fill: "hsl(0, 0%, 50%)", fontSize: 12 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: "hsl(0, 0%, 50%)", fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => `${v}B`} />
               <Tooltip
-                contentStyle={{ background: "hsl(220, 18%, 12%)", border: "1px solid hsl(220, 14%, 18%)", borderRadius: 8, color: "hsl(210, 20%, 95%)" }}
+                contentStyle={{ background: "hsl(0, 0%, 10%)", border: "1px solid hsl(0, 0%, 16%)", borderRadius: 8, color: "hsl(0, 0%, 95%)" }}
                 formatter={(v: number) => [`R$ ${v.toFixed(2)} bi`]}
               />
-              <Area type="monotone" dataKey="total" stroke="hsl(213, 70%, 50%)" fill="url(#gradTotal)" strokeWidth={2} name="Total" />
-              <Area type="monotone" dataKey="aged" stroke="hsl(0, 72%, 51%)" fill="url(#gradAged)" strokeWidth={2} name="Parado 120+" />
+              <Area type="monotone" dataKey="total" stroke="hsl(0, 0%, 100%)" fill="url(#gradTotal)" strokeWidth={2} name="Total" />
+              <Area type="monotone" dataKey="aged" stroke="hsl(0, 0%, 50%)" fill="url(#gradAged)" strokeWidth={2} name="Parado 120+" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
