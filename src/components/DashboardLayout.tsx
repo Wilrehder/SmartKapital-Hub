@@ -92,6 +92,7 @@ export default function DashboardLayout() {
                 className="h-9 pl-9 pr-4 rounded-lg bg-secondary border-none text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary w-64"
               />
             </div>
+            <img src={sgsLogo} alt="SGS" className="h-8 object-contain" />
             <button className="relative p-2 rounded-lg hover:bg-secondary transition-colors">
               <Bell className="w-5 h-5 text-muted-foreground" />
               {criticalCount > 0 && (
