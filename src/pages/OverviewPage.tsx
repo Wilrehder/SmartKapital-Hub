@@ -203,7 +203,7 @@ export default function OverviewPage() {
             </div>
             <div>
               <h3 className="font-semibold text-foreground">Agente de IA</h3>
-              <p className="text-xs text-muted-foreground">Copiloto analítico KG WATCH</p>
+              <p className="text-xs text-muted-foreground"><p className="text-xs text-muted-foreground">Copiloto analítico Smart Kapital Hub</p></p>
             </div>
           </div>
           <div className="space-y-3 mb-4">

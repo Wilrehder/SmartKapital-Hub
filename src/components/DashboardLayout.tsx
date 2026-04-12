@@ -33,12 +33,10 @@ export default function DashboardLayout() {
       )}>
         {/* Logo */}
         <div className="flex items-center gap-3 px-4 h-16 border-b border-border">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
-            <span className="text-primary-foreground font-bold text-sm">KG</span>
-          </div>
+          <img src="/favicon.ico" alt="Smart Kapital Hub" className="w-8 h-8 flex-shrink-0" />
           {!collapsed && (
             <span className="font-bold text-foreground text-lg tracking-tight">
-              KG <span className="gradient-text">WATCH</span>
+              Smart <span className="gradient-text">Kapital Hub</span>
             </span>
           )}
         </div>
@@ -81,7 +79,7 @@ export default function DashboardLayout() {
         <header className="h-16 border-b border-border flex items-center justify-between px-6 bg-card/50 backdrop-blur-sm">
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-semibold text-foreground">
-              {menuItems.find(m => m.path === location.pathname)?.label || "KG WATCH"}
+              {menuItems.find(m => m.path === location.pathname)?.label || "Smart Kapital Hub"}
             </h1>
           </div>
           <div className="flex items-center gap-4">

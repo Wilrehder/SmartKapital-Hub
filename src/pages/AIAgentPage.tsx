@@ -7,7 +7,7 @@ interface Message {
 }
 
 const initialMessages: Message[] = [
-  { role: "assistant", content: "Olá! Sou o agente de IA do **KG WATCH**. Posso ajudá-lo a analisar indicadores de estoque, identificar riscos e sugerir prioridades. Como posso ajudar?" },
+  { role: "assistant", content: "Olá! Sou o agente de IA do **Smart Kapital Hub**. Posso ajudá-lo a analisar indicadores de estoque, identificar riscos e sugerir prioridades. Como posso ajudar?" },
 ];
 
 function getResponse(input: string): string {
@@ -39,7 +39,7 @@ function getResponse(input: string): string {
   if (q.includes("risco") || q.includes("prioridade") || q.includes("recomend")) {
     return "🎯 **Top 5 Prioridades Recomendadas:**\n\n1. **MRO 120+ dias** — R$ 208 mi em oportunidade de redução\n2. **TPEC Imperatriz** — 12 bobinas há 300+ dias sem resolução\n3. **Inventário** — Acelerar contagens para atingir meta de 80%\n4. **Fornecedores não inventariados** — R$ 292 mi em risco\n5. **Estornos recorrentes** — 2.180 materiais com 3+ reversões\n\nPosso detalhar qualquer um desses pontos.";
   }
-  return "Entendi sua pergunta. Com base nos dados do KG WATCH, posso analisar:\n\n- **Aging de materiais** (120+ dias)\n- **Materiais no fornecedor**\n- **Madeira e mudas**\n- **TPEC e sinistros**\n- **Materiais bloqueados e estornos**\n- **Volumetria e inventário**\n- **Riscos e prioridades**\n\nPode reformular sua pergunta ou escolher um dos temas acima?";
+  return "Entendi sua pergunta. Com base nos dados do Smart Kapital Hub, posso analisar:\n\n- **Aging de materiais** (120+ dias)\n- **Materiais no fornecedor**\n- **Madeira e mudas**\n- **TPEC e sinistros**\n- **Materiais bloqueados e estornos**\n- **Volumetria e inventário**\n- **Riscos e prioridades**\n\nPode reformular sua pergunta ou escolher um dos temas acima?";
 }
 
 export default function AIAgentPage() {
@@ -72,7 +72,7 @@ export default function AIAgentPage() {
         <div className="flex items-center gap-3 p-4 border-b border-border">
           <div className="p-2 rounded-lg bg-primary/10"><Bot className="w-5 h-5 text-primary" /></div>
           <div>
-            <h3 className="font-semibold text-foreground">Agente de IA — KG WATCH</h3>
+            <h3 className="font-semibold text-foreground">Agente de IA — Smart Kapital Hub</h3>
             <p className="text-xs text-muted-foreground">Copiloto analítico de estoque e capital de giro</p>
           </div>
           <div className="ml-auto flex items-center gap-1.5">

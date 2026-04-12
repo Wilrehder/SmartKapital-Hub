@@ -1,4 +1,4 @@
-// KG WATCH - Mock Data Layer
+// Smart Kapital Hub - Mock Data Layer
 // Simulated data for a ~R$9B industrial company
 
 export const stockLines = [
