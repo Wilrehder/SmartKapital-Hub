@@ -168,27 +168,96 @@ export const supplierMaterials = {
 // Wood and seedlings
 export const woodAndSeedlings = {
   wood: {
-    totalBalance: 420_000_000,
-    noMovement: 78_000_000,
-    noPosition: 12_340,
-    avgDaysStopped: 87,
-    byUnit: units.slice(0, 5).map((unit, i) => ({
-      unit,
-      value: [120, 95, 82, 68, 55][i] * 1_000_000,
-      noMovement: [22, 18, 15, 12, 11][i] * 1_000_000,
-      daysStopped: [102, 87, 76, 65, 94][i],
-    })),
+    // KPIs
+    estDispoM3: 12_180_000,
+    estDispoMoM: 11_900_000,
+    estDispoVar: 2.33,
+    valorTotal: 1_890_000_000,
+    valorTotalMoM: 1_740_000_000,
+    valorTotalVar: 8.27,
+    agingM3: 850_000,
+    agingM3MoM: 830_000,
+    agingM3Var: 2.59,
+    valorAging: 113_210_000,
+    valorAgingMoM: 106_450_000,
+    valorAgingVar: 5.97,
+    posicoesIndef: 18,
+    posicoesIndefMoM: 43,
+    posicoesIndefVar: -58.14,
+    // Estoque por UNF
+    byUNF: [
+      { unf: "MS", estDispoM3: 4_897_802, valor: 879_670_000 },
+      { unf: "ARAMUC", estDispoM3: 3_308_784, valor: 412_670_000 },
+      { unf: "SP", estDispoM3: 2_576_849, valor: 428_140_000 },
+      { unf: "MA PA", estDispoM3: 1_397_927, valor: 167_870_000 },
+    ],
+    // Aging última movimentação em estoque (M³)
+    agingByRange: [
+      { range: "De 0 à 180", m3: 11_130_000, valor: 1_746_100_000 },
+      { range: "De 181 à 240", m3: 400_000, valor: 58_300_000 },
+      { range: "De 241 à 300", m3: 240_000, valor: 33_500_000 },
+      { range: "De 301 à 360", m3: 130_000, valor: 17_900_000 },
+      { range: "De 360 à acima", m3: 280_000, valor: 32_600_000 },
+    ],
+    // Madeira acima de 180 dias — insights por UNF
+    above180ByUNF: [
+      { unf: "MS", m3: 529_000, valor: 73_960_000, percent: 50, insight: "Unidade com maior volume de estoque concentrando 50% do total." },
+      { unf: "SP", m3: 266_900, valor: 46_580_000, percent: 33, insight: "Segundo maior volume concentrando 33% do valor total." },
+      { unf: "ARAMUC", m3: 239_700, valor: 20_030_000, percent: 0, insight: "Maior redução comparado ao mês anterior, reduzindo em 50% seu valor total." },
+      { unf: "MA", m3: 13_900, valor: 1_710_000, percent: 0, insight: "Sem impacto relevante." },
+    ],
+    // Distribuição por Classificação de Madeira
+    byClassification: [
+      { tipo: "Celulose", m3: 680_520, valor: 94_670_000, percent: 64, insight: "Principal grupo de madeira sem movimentação representando 64% do total de estoque parado concentrado principalmente em MS (62,1%)." },
+      { tipo: "Energia", m3: 201_080, valor: 29_960_000, percent: 19, insight: "Correspondente a 19% do valor total com volume maior em MS e ARAMUC." },
+      { tipo: "Venda", m3: 167_830, valor: 20_660_000, percent: 16, insight: "Impacto menor (16%), porém relevante para gestão comercial e giro de estoques." },
+    ],
   },
   seedlings: {
-    totalBalance: 150_000_000,
-    noMovement: 28_000_000,
-    noPosition: 4_200,
-    byNursery: [
-      { name: "Viveiro Central – Imperatriz", value: 42_000_000, items: 8_200, aging: 67 },
-      { name: "Viveiro Sul – Três Lagoas", value: 38_000_000, items: 7_100, aging: 54 },
-      { name: "Viveiro Nordeste – Mucuri", value: 32_000_000, items: 5_800, aging: 78 },
-      { name: "Viveiro Sudeste – Jacareí", value: 24_000_000, items: 4_500, aging: 45 },
-      { name: "Viveiro Norte – Belém", value: 14_000_000, items: 2_600, aging: 92 },
+    // KPIs
+    qtdTotal: 18_000,
+    qtdTotalMoM: 18_000,
+    qtdTotalVar: -1.29,
+    valorTotal: 18_443_000,
+    valorTotalMoM: 16_811_000,
+    valorTotalVar: 9.71,
+    qtdAcima60d: 1_500,
+    qtdAcima60dMoM: 1_000,
+    qtdAcima60dVar: 17.0,
+    valorAcima60d: 1_109_070,
+    valorAcima60dMoM: 955_000,
+    valorAcima60dVar: 16.15,
+    // Mudas por UNF — último mês
+    byUNF: [
+      { unf: "UNF Três Lagoas", qtdTotal: 3_700, qtdAcima60d: 100, valorTotal: 5_500_000, valorAcima60d: 200_000 },
+      { unf: "UNF SP", qtdTotal: 2_600, qtdAcima60d: 0, valorTotal: 1_900_000, valorAcima60d: 0 },
+      { unf: "UNF Ribas", qtdTotal: 6_800, qtdAcima60d: 100, valorTotal: 7_900_000, valorAcima60d: 100_000 },
+      { unf: "UNF MA PA", qtdTotal: 500, qtdAcima60d: 0, valorTotal: 400_000, valorAcima60d: 0 },
+      { unf: "UNF ARAMUC", qtdTotal: 4_400, qtdAcima60d: 1_300, valorTotal: 2_800_000, valorAcima60d: 800_000 },
+    ],
+    // Evolução mudas sem movimentação acima 60 dias
+    evolution: [
+      { month: "Dez 2025", data: [
+        { unf: "UNF Três Lagoas", qtd: 800, valor: 490_000 },
+        { unf: "UNF ARAMUC", qtd: 0, valor: 0 },
+        { unf: "UNF SP", qtd: 0, valor: 100_000 },
+        { unf: "UNF Ribas", qtd: 0, valor: 0 },
+        { unf: "UNF MA PA", qtd: 0, valor: 0 },
+      ]},
+      { month: "Jan 2026", data: [
+        { unf: "UNF Três Lagoas", qtd: 900, valor: 550_000 },
+        { unf: "UNF ARAMUC", qtd: 300, valor: 290_000 },
+        { unf: "UNF SP", qtd: 100, valor: 100_000 },
+        { unf: "UNF Ribas", qtd: 0, valor: 0 },
+        { unf: "UNF MA PA", qtd: 0, valor: 0 },
+      ]},
+      { month: "Fev 2026", data: [
+        { unf: "UNF Três Lagoas", qtd: 1_300, valor: 820_000 },
+        { unf: "UNF ARAMUC", qtd: 100, valor: 190_000 },
+        { unf: "UNF SP", qtd: 100, valor: 0 },
+        { unf: "UNF Ribas", qtd: 0, valor: 0 },
+        { unf: "UNF MA PA", qtd: 0, valor: 0 },
+      ]},
     ],
   },
 };
