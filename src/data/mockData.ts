@@ -1,4 +1,4 @@
-// Smart Kapital Hub - Mock Data Layer
+// Smart Capital - Mock Data Layer
 // Simulated data for a ~R$9B industrial company
 
 export const stockLines = [
