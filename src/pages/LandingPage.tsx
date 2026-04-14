@@ -61,8 +61,8 @@ export default function LandingPage() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center w-full max-w-2xl px-6">
-        {/* Smart Kapital logo centered */}
+      <div className="relative z-10 flex flex-col items-center w-full max-w-2xl px-6 -mt-8">
+        {/* Smart Capital logo centered */}
         <img src={smartCapitalLogo} alt="Smart Capital" className="h-44 object-contain mb-6" />
         <h1 className="text-5xl md:text-6xl font-light text-foreground tracking-tight text-center mb-3">
           Smart Capital <span className="font-light">AI.</span>
@@ -137,11 +137,14 @@ export default function LandingPage() {
         {/* Dashboard button */}
         <button
           onClick={() => navigate("/dashboard")}
-          className="flex items-center gap-2 px-6 py-3 rounded-xl border border-border text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-all"
+          className="flex items-center gap-2 px-6 py-3 rounded-xl border border-border text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-all mb-8"
         >
           <LayoutDashboard className="w-4 h-4" />
           Acessar Painel Executivo
         </button>
+
+        {/* SGS logo centered bottom */}
+        <img src={sgsLogoGreen} alt="SGS Gestão de Inventários" className="h-16 w-auto object-contain" />
       </div>
     </div>
   );
