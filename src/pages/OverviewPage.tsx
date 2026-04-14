@@ -200,7 +200,7 @@ export default function OverviewPage() {
         <div className="glass-card p-5 glow-blue">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 rounded-lg bg-primary/10">
-              <Bot className="w-5 h-5 text-primary" />
+              <img src={smartKapitalAiIcon} alt="Smart Kapital AI" className="w-5 h-5 object-contain" />
             </div>
             <div>
               <h3 className="font-semibold text-foreground">Agente de IA</h3>
