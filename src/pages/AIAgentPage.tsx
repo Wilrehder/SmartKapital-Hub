@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Bot, Send, User } from "lucide-react";
+import { Send, User } from "lucide-react";
+import smartKapitalAiIcon from "@/assets/smart-kapital-ai-icon.png";
 
 interface Message {
   role: "user" | "assistant";
@@ -7,7 +8,7 @@ interface Message {
 }
 
 const initialMessages: Message[] = [
-  { role: "assistant", content: "Olá! Sou o agente de IA do **Smart Kapital Hub**. Posso ajudá-lo a analisar indicadores de estoque, identificar riscos e sugerir prioridades. Como posso ajudar?" },
+  { role: "assistant", content: "Olá! Sou o agente de IA do **Smart Kapital AI**. Posso ajudá-lo a analisar indicadores de estoque, identificar riscos e sugerir prioridades. Como posso ajudar?" },
 ];
 
 function getResponse(input: string): string {
@@ -39,7 +40,7 @@ function getResponse(input: string): string {
   if (q.includes("risco") || q.includes("prioridade") || q.includes("recomend")) {
     return "🎯 **Top 5 Prioridades Recomendadas:**\n\n1. **MRO 120+ dias** — R$ 208 mi em oportunidade de redução\n2. **TPEC Imperatriz** — 12 bobinas há 300+ dias sem resolução\n3. **Inventário** — Acelerar contagens para atingir meta de 80%\n4. **Fornecedores não inventariados** — R$ 292 mi em risco\n5. **Estornos recorrentes** — 2.180 materiais com 3+ reversões\n\nPosso detalhar qualquer um desses pontos.";
   }
-  return "Entendi sua pergunta. Com base nos dados do Smart Kapital Hub, posso analisar:\n\n- **Aging de materiais** (120+ dias)\n- **Materiais no fornecedor**\n- **Madeira e mudas**\n- **TPEC e sinistros**\n- **Materiais bloqueados e estornos**\n- **Volumetria e inventário**\n- **Riscos e prioridades**\n\nPode reformular sua pergunta ou escolher um dos temas acima?";
+  return "Entendi sua pergunta. Com base nos dados do Smart Kapital AI, posso analisar:\n\n- **Aging de materiais** (120+ dias)\n- **Materiais no fornecedor**\n- **Madeira e mudas**\n- **TPEC e sinistros**\n- **Materiais bloqueados e estornos**\n- **Volumetria e inventário**\n- **Riscos e prioridades**\n\nPode reformular sua pergunta ou escolher um dos temas acima?";
 }
 
 export default function AIAgentPage() {
@@ -70,9 +71,11 @@ export default function AIAgentPage() {
       <div className="glass-card flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center gap-3 p-4 border-b border-border">
-          <div className="p-2 rounded-lg bg-primary/10"><Bot className="w-5 h-5 text-primary" /></div>
+          <div className="p-2 rounded-lg bg-primary/10">
+            <img src={smartKapitalAiIcon} alt="Smart Kapital AI" className="w-5 h-5 object-contain" />
+          </div>
           <div>
-            <h3 className="font-semibold text-foreground">Agente de IA — Smart Kapital Hub</h3>
+            <h3 className="font-semibold text-foreground">Smart Kapital AI</h3>
             <p className="text-xs text-muted-foreground">Copiloto analítico de estoque e capital de giro</p>
           </div>
           <div className="ml-auto flex items-center gap-1.5">
@@ -87,7 +90,7 @@ export default function AIAgentPage() {
             <div key={i} className={`flex gap-3 ${msg.role === "user" ? "justify-end" : ""}`}>
               {msg.role === "assistant" && (
                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Bot className="w-4 h-4 text-primary" />
+                  <img src={smartKapitalAiIcon} alt="AI" className="w-5 h-5 object-contain" />
                 </div>
               )}
               <div className={`max-w-[70%] rounded-xl px-4 py-3 text-sm leading-relaxed ${
@@ -113,7 +116,7 @@ export default function AIAgentPage() {
           {typing && (
             <div className="flex gap-3">
               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <Bot className="w-4 h-4 text-primary" />
+                <img src={smartKapitalAiIcon} alt="AI" className="w-5 h-5 object-contain" />
               </div>
               <div className="bg-secondary rounded-xl px-4 py-3 text-sm text-muted-foreground">
                 Analisando dados<span className="animate-pulse">...</span>
