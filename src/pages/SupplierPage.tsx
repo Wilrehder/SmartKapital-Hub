@@ -3,8 +3,9 @@ import {
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from "recharts";
 import { supplierMaterials, formatCurrency, formatNumber } from "@/data/mockData";
+import { CHART_PALETTE, BRAND_BLUE, TOOLTIP_STYLE as TT, AXIS_TICK, GRID_STROKE } from "@/lib/chartColors";
 
-const COLORS = ["hsl(213, 70%, 50%)", "hsl(142, 60%, 45%)", "hsl(38, 92%, 50%)", "hsl(0, 72%, 51%)"];
+const COLORS = CHART_PALETTE.slice(0, 4);
 
 export default function SupplierPage() {
   return (

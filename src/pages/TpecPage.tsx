@@ -4,6 +4,7 @@ import {
 } from "recharts";
 import { tpecData, formatCurrency } from "@/data/mockData";
 import { TrendingUp, TrendingDown, Lightbulb, AlertCircle } from "lucide-react";
+import { CHART_CRITICAL, BRAND_BLUE, TOOLTIP_STYLE, AXIS_TICK, GRID_STROKE } from "@/lib/chartColors";
 
 function formatKg(v: number) {
   if (v >= 1_000) return `${(v / 1_000).toFixed(0)} mil`;
@@ -26,14 +27,6 @@ function VarBadge({ value, mom, prefix = "" }: { value: number; mom: number; pre
     </p>
   );
 }
-
-const TOOLTIP_STYLE = {
-  background: "hsl(0, 0%, 10%)",
-  border: "1px solid hsl(0, 0%, 16%)",
-  borderRadius: 8,
-  color: "hsl(0, 0%, 95%)",
-  fontSize: 11,
-};
 
 export default function TpecPage() {
   const d = tpecData;

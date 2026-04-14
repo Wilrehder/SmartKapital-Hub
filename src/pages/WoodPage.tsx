@@ -5,6 +5,7 @@ import {
 } from "recharts";
 import { woodAndSeedlings, formatCurrency, formatNumber } from "@/data/mockData";
 import { TreePine, Sprout, TrendingUp, TrendingDown } from "lucide-react";
+import { CHART_PALETTE, BRAND_BLUE, BRAND_DARK_BLUE, TOOLTIP_STYLE as TT_STYLE, AXIS_TICK, GRID_STROKE } from "@/lib/chartColors";
 
 const wood = woodAndSeedlings.wood;
 const seedlings = woodAndSeedlings.seedlings;

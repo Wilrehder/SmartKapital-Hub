@@ -5,17 +5,10 @@ import {
 } from "recharts";
 import { blockedData, formatCurrency, formatNumber } from "@/data/mockData";
 import { Lock, RotateCcw, Repeat } from "lucide-react";
+import { CHART_PALETTE, CHART_CRITICAL, CHART_WARNING, BRAND_BLUE, BRAND_GOLD, TOOLTIP_STYLE, AXIS_TICK, GRID_STROKE } from "@/lib/chartColors";
 
-const LINE_COLORS = ["hsl(0, 72%, 51%)", "hsl(38, 92%, 50%)", "hsl(213, 70%, 50%)", "hsl(260, 60%, 55%)", "hsl(142, 60%, 45%)", "hsl(190, 70%, 50%)", "hsl(320, 60%, 50%)"];
-const TYPE_COLORS = ["hsl(0, 72%, 51%)", "hsl(38, 92%, 50%)"];
-
-const TOOLTIP_STYLE = {
-  background: "hsl(0, 0%, 10%)",
-  border: "1px solid hsl(0, 0%, 16%)",
-  borderRadius: 8,
-  color: "hsl(0, 0%, 95%)",
-  fontSize: 11,
-};
+const LINE_COLORS = CHART_PALETTE;
+const TYPE_COLORS = [CHART_CRITICAL, BRAND_GOLD];
 
 function BlockedView() {
   const b = blockedData.blocked;

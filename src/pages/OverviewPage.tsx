@@ -12,12 +12,7 @@ import {
   kpis, stockDistribution, monthlyTrend, alerts,
   formatCurrency, formatNumber
 } from "@/data/mockData";
-
-const COLORS = [
-  "hsl(0, 0%, 100%)", "hsl(0, 0%, 85%)", "hsl(0, 0%, 70%)",
-  "hsl(0, 0%, 60%)", "hsl(0, 0%, 50%)", "hsl(0, 0%, 40%)",
-  "hsl(0, 0%, 75%)", "hsl(0, 0%, 65%)", "hsl(0, 0%, 55%)", "hsl(0, 0%, 45%)"
-];
+import { CHART_PALETTE, TOOLTIP_STYLE as TT, AXIS_TICK, GRID_STROKE, BRAND_BLUE, BRAND_DARK_BLUE } from "@/lib/chartColors";
 
 const kpiCards = [
   { label: "Total de Materiais", value: formatNumber(kpis.totalMaterials), icon: Package, trend: "+1.8%", trendUp: true, path: "/volumetry" },

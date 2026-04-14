@@ -4,12 +4,13 @@ import {
 } from "recharts";
 import { agingData, formatCurrency, formatNumber } from "@/data/mockData";
 import { AlertTriangle, Shield, Activity, Zap, PackageMinus, Factory, TreePine } from "lucide-react";
+import { AGING_COLORS, CHART_SUCCESS, CHART_WARNING, CHART_CRITICAL, TOOLTIP_STYLE as TT, AXIS_TICK, GRID_STROKE } from "@/lib/chartColors";
 
-const COLORS = ["hsl(38, 92%, 50%)", "hsl(0, 72%, 51%)", "hsl(320, 60%, 50%)"];
+const COLORS = AGING_COLORS;
 const MRO_CLASS_COLORS = {
-  healthy: "hsl(142, 60%, 45%)",
-  attention: "hsl(38, 92%, 50%)",
-  excess: "hsl(0, 72%, 51%)",
+  healthy: CHART_SUCCESS,
+  attention: CHART_WARNING,
+  excess: CHART_CRITICAL,
 };
 
 const mro = agingData.mroIntelligence;
