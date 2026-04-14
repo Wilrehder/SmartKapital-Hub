@@ -3,7 +3,7 @@ import {
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from "recharts";
 import { agingData, formatCurrency, formatNumber } from "@/data/mockData";
-import { AlertTriangle, TrendingDown, Shield, Activity, Zap, PackageMinus, Factory, TreePine } from "lucide-react";
+import { AlertTriangle, Shield, Activity, Zap, PackageMinus, Factory, TreePine } from "lucide-react";
 
 const COLORS = ["hsl(38, 92%, 50%)", "hsl(0, 72%, 51%)", "hsl(320, 60%, 50%)"];
 const MRO_CLASS_COLORS = {
@@ -243,42 +243,43 @@ export default function AgingPage() {
         </div>
       </div>
 
-      {/* ── MRO: Ação & Decisão ── */}
+      {/* ── MRO: Ação & Decisão por Unidade ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Materiais Críticos (Risco Operacional) */}
+        {/* Risco Operacional por Unidade */}
         <div className="glass-card p-5">
           <div className="flex items-center gap-2 mb-4">
             <AlertTriangle className="w-4 h-4 text-destructive" />
-            <h3 className="font-semibold text-foreground">MRO — Risco Operacional</h3>
-            <span className="ml-auto text-[10px] text-muted-foreground">{mro.criticalMaterials.length} materiais</span>
+            <h3 className="font-semibold text-foreground">MRO — Risco Operacional por Unidade</h3>
           </div>
           <p className="text-[11px] text-muted-foreground mb-3">
-            Materiais de alta criticidade com aging elevado — risco de impacto operacional mesmo parados.
+            Unidades com maior concentração de materiais críticos e aging elevado.
           </p>
           <div className="overflow-auto max-h-80">
             <table className="w-full text-xs">
               <thead>
                 <tr className="text-muted-foreground text-[10px] border-b border-border uppercase tracking-wider">
-                  <th className="text-left py-2 pr-1.5">Material</th>
-                  <th className="text-left py-2 pr-1.5">Descrição</th>
+                  <th className="text-left py-2 pr-1.5">Unidade</th>
+                  <th className="text-center py-2 pr-1.5">Tipo</th>
                   <th className="text-right py-2 pr-1.5">Valor</th>
-                  <th className="text-right py-2 pr-1.5">Aging</th>
-                  <th className="text-center py-2 pr-1.5">Crit.</th>
-                  <th className="text-center py-2 pr-1.5">Freq.</th>
+                  <th className="text-right py-2 pr-1.5">Itens</th>
+                  <th className="text-right py-2 pr-1.5">Aging Médio</th>
+                  <th className="text-right py-2 pr-1.5">% Crítico</th>
                   <th className="text-right py-2">Cob.</th>
                 </tr>
               </thead>
               <tbody>
-                {mro.criticalMaterials.map((m) => (
-                  <tr key={m.code} className="border-b border-border/50 hover:bg-secondary/30">
-                    <td className="py-1.5 pr-1.5 font-mono text-primary">{m.code}</td>
-                    <td className="py-1.5 pr-1.5 text-foreground/80 max-w-[140px] truncate">{m.desc}</td>
+                {mro.criticalByUnit.map((m) => (
+                  <tr key={m.unit} className="border-b border-border/50 hover:bg-secondary/30">
+                    <td className="py-1.5 pr-1.5 font-medium text-foreground">{m.unit}</td>
+                    <td className="py-1.5 pr-1.5 text-center"><TypeBadge type={m.type} /></td>
                     <td className="py-1.5 pr-1.5 text-right font-medium text-foreground">{formatCurrency(m.value)}</td>
+                    <td className="py-1.5 pr-1.5 text-right text-muted-foreground">{formatNumber(m.items)}</td>
                     <td className="py-1.5 pr-1.5 text-right">
-                      <span className={m.aging > 500 ? "text-destructive font-medium" : m.aging > 300 ? "text-warning" : "text-foreground"}>{m.aging}d</span>
+                      <span className={m.avgAging > 350 ? "text-destructive font-medium" : m.avgAging > 250 ? "text-warning" : "text-foreground"}>{m.avgAging}d</span>
                     </td>
-                    <td className="py-1.5 pr-1.5 text-center"><CriticalityBadge level={m.criticality} /></td>
-                    <td className="py-1.5 pr-1.5 text-center text-muted-foreground">{m.frequency}</td>
+                    <td className="py-1.5 pr-1.5 text-right">
+                      <span className={m.criticalPercent > 50 ? "text-destructive font-medium" : "text-warning"}>{m.criticalPercent}%</span>
+                    </td>
                     <td className="py-1.5 text-right text-muted-foreground">{m.coverage}m</td>
                   </tr>
                 ))}
@@ -287,7 +288,7 @@ export default function AgingPage() {
           </div>
         </div>
 
-        {/* Oportunidade de Redução */}
+        {/* Oportunidade de Redução por Unidade */}
         <div className="glass-card p-5">
           <div className="flex items-center gap-2 mb-4">
             <PackageMinus className="w-4 h-4 text-warning" />
@@ -295,30 +296,32 @@ export default function AgingPage() {
             <span className="ml-auto text-[10px] text-muted-foreground">{formatCurrency(totalReductionValue)}</span>
           </div>
           <p className="text-[11px] text-muted-foreground mb-3">
-            Materiais de baixa criticidade e baixo consumo — candidatos a redução ou desmobilização.
+            Unidades com maior potencial de redução — baixa criticidade e baixo consumo.
           </p>
           <div className="overflow-auto max-h-80">
             <table className="w-full text-xs">
               <thead>
                 <tr className="text-muted-foreground text-[10px] border-b border-border uppercase tracking-wider">
-                  <th className="text-left py-2 pr-1.5">Material</th>
-                  <th className="text-left py-2 pr-1.5">Descrição</th>
+                  <th className="text-left py-2 pr-1.5">Unidade</th>
+                  <th className="text-center py-2 pr-1.5">Tipo</th>
                   <th className="text-right py-2 pr-1.5">Valor</th>
-                  <th className="text-center py-2 pr-1.5">Últ. Consumo</th>
-                  <th className="text-right py-2 pr-1.5">Aging</th>
+                  <th className="text-right py-2 pr-1.5">Itens</th>
+                  <th className="text-right py-2 pr-1.5">Aging Médio</th>
+                  <th className="text-right py-2 pr-1.5">% Baixo Cons.</th>
                   <th className="text-center py-2">Ação</th>
                 </tr>
               </thead>
               <tbody>
-                {mro.reductionOpportunities.map((m) => (
-                  <tr key={m.code} className="border-b border-border/50 hover:bg-secondary/30">
-                    <td className="py-1.5 pr-1.5 font-mono text-primary">{m.code}</td>
-                    <td className="py-1.5 pr-1.5 text-foreground/80 max-w-[140px] truncate">{m.desc}</td>
+                {mro.reductionByUnit.map((m) => (
+                  <tr key={m.unit} className="border-b border-border/50 hover:bg-secondary/30">
+                    <td className="py-1.5 pr-1.5 font-medium text-foreground">{m.unit}</td>
+                    <td className="py-1.5 pr-1.5 text-center"><TypeBadge type={m.type} /></td>
                     <td className="py-1.5 pr-1.5 text-right font-medium text-foreground">{formatCurrency(m.value)}</td>
-                    <td className="py-1.5 pr-1.5 text-center text-muted-foreground">{m.lastConsumption}</td>
+                    <td className="py-1.5 pr-1.5 text-right text-muted-foreground">{formatNumber(m.items)}</td>
                     <td className="py-1.5 pr-1.5 text-right">
-                      <span className={m.aging > 400 ? "text-destructive font-medium" : "text-warning"}>{m.aging}d</span>
+                      <span className={m.avgAging > 400 ? "text-destructive font-medium" : "text-warning"}>{m.avgAging}d</span>
                     </td>
+                    <td className="py-1.5 pr-1.5 text-right text-muted-foreground">{m.lowConsumptionPercent}%</td>
                     <td className="py-1.5 text-center"><ActionBadge action={m.action} /></td>
                   </tr>
                 ))}
@@ -328,22 +331,24 @@ export default function AgingPage() {
         </div>
       </div>
 
-      {/* Ranking de Impacto */}
+      {/* Ranking de Impacto por Unidade */}
       <div className="glass-card p-5">
         <div className="flex items-center gap-2 mb-4">
           <Zap className="w-4 h-4 text-warning" />
-          <h3 className="font-semibold text-foreground">MRO — Ranking de Impacto</h3>
-          <span className="ml-auto text-xs text-muted-foreground">Top 10 · {formatCurrency(totalImpactValue)} em estoque parado</span>
+          <h3 className="font-semibold text-foreground">MRO — Ranking de Impacto por Unidade</h3>
+          <span className="ml-auto text-xs text-muted-foreground">{formatCurrency(totalImpactValue)} em estoque parado</span>
         </div>
         <div className="overflow-auto">
           <table className="w-full text-xs">
             <thead>
               <tr className="text-muted-foreground text-[10px] border-b border-border uppercase tracking-wider">
                 <th className="text-center py-2 pr-2 w-8">#</th>
-                <th className="text-left py-2 pr-2">Material</th>
-                <th className="text-left py-2 pr-2">Descrição</th>
+                <th className="text-left py-2 pr-2">Unidade</th>
+                <th className="text-center py-2 pr-2">Tipo</th>
                 <th className="text-right py-2 pr-2">Valor</th>
-                <th className="text-right py-2 pr-2">Aging</th>
+                <th className="text-right py-2 pr-2">Itens</th>
+                <th className="text-right py-2 pr-2">Aging Médio</th>
+                <th className="text-right py-2 pr-2">% Excesso</th>
                 <th className="text-center py-2 pr-2">Risco</th>
                 <th className="text-left py-2">Impacto</th>
               </tr>
@@ -352,13 +357,17 @@ export default function AgingPage() {
               {mro.impactRanking.map((m, i) => {
                 const barWidth = (m.value / mro.impactRanking[0].value) * 100;
                 return (
-                  <tr key={m.code} className="border-b border-border/50 hover:bg-secondary/30">
+                  <tr key={m.unit} className="border-b border-border/50 hover:bg-secondary/30">
                     <td className="py-1.5 pr-2 text-center text-muted-foreground font-medium">{i + 1}</td>
-                    <td className="py-1.5 pr-2 font-mono text-primary">{m.code}</td>
-                    <td className="py-1.5 pr-2 text-foreground/80 max-w-[180px] truncate">{m.desc}</td>
+                    <td className="py-1.5 pr-2 font-medium text-foreground">{m.unit}</td>
+                    <td className="py-1.5 pr-2 text-center"><TypeBadge type={m.type} /></td>
                     <td className="py-1.5 pr-2 text-right font-medium text-foreground">{formatCurrency(m.value)}</td>
+                    <td className="py-1.5 pr-2 text-right text-muted-foreground">{formatNumber(m.items)}</td>
                     <td className="py-1.5 pr-2 text-right">
-                      <span className={m.aging > 400 ? "text-destructive font-medium" : m.aging > 250 ? "text-warning" : "text-foreground"}>{m.aging}d</span>
+                      <span className={m.avgAging > 400 ? "text-destructive font-medium" : m.avgAging > 300 ? "text-warning" : "text-foreground"}>{m.avgAging}d</span>
+                    </td>
+                    <td className="py-1.5 pr-2 text-right">
+                      <span className={m.excessPercent > 28 ? "text-destructive font-medium" : "text-warning"}>{m.excessPercent}%</span>
                     </td>
                     <td className="py-1.5 pr-2 text-center"><RiskBadge risk={m.risk} /></td>
                     <td className="py-1.5 w-24">
