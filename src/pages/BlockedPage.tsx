@@ -4,11 +4,10 @@ import {
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend
 } from "recharts";
 import { blockedData, formatCurrency, formatNumber } from "@/data/mockData";
-import { Lock, RotateCcw, AlertTriangle, Repeat } from "lucide-react";
+import { Lock, RotateCcw, Repeat } from "lucide-react";
 
-const REASON_COLORS = ["hsl(0, 72%, 51%)", "hsl(38, 92%, 50%)", "hsl(213, 70%, 50%)", "hsl(260, 60%, 55%)", "hsl(190, 70%, 50%)"];
 const LINE_COLORS = ["hsl(0, 72%, 51%)", "hsl(38, 92%, 50%)", "hsl(213, 70%, 50%)", "hsl(260, 60%, 55%)", "hsl(142, 60%, 45%)", "hsl(190, 70%, 50%)", "hsl(320, 60%, 50%)"];
-const TYPE_COLORS = ["hsl(0, 72%, 51%)", "hsl(38, 92%, 50%)", "hsl(213, 70%, 50%)", "hsl(142, 60%, 45%)", "hsl(260, 60%, 55%)", "hsl(190, 70%, 50%)"];
+const TYPE_COLORS = ["hsl(0, 72%, 51%)", "hsl(38, 92%, 50%)"];
 
 const TOOLTIP_STYLE = {
   background: "hsl(0, 0%, 10%)",
@@ -21,31 +20,17 @@ const TOOLTIP_STYLE = {
 function BlockedView() {
   const b = blockedData.blocked;
 
-  const stockLineData = b.byStockLine.map(s => ({
-    line: s.line,
-    qualidade: s.qualidade / 1_000_000,
-    inspecao: s.inspecao / 1_000_000,
-    fiscal: s.fiscal / 1_000_000,
-    avaria: s.avaria / 1_000_000,
-    gerencial: s.gerencial / 1_000_000,
-  }));
-
   return (
     <div className="space-y-5">
       {/* KPIs */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         <div className="stat-card">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Total Bloqueado</p>
-          <p className="text-xl font-bold text-foreground">{formatNumber(b.total)}</p>
-          <p className="text-xs text-muted-foreground">itens</p>
+          <p className="text-xl font-bold text-foreground">{formatNumber(b.total)} itens</p>
         </div>
         <div className="stat-card">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Valor Total</p>
           <p className="text-xl font-bold text-destructive">{formatCurrency(b.value)}</p>
-        </div>
-        <div className="stat-card">
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Motivos Distintos</p>
-          <p className="text-xl font-bold text-foreground">{b.byReason.length}</p>
         </div>
         <div className="stat-card">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Linhas Afetadas</p>
@@ -53,28 +38,28 @@ function BlockedView() {
         </div>
       </div>
 
-      {/* Por motivo + Por unidade */}
+      {/* Por linha de estoque (donut) + Por unidade */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="glass-card p-5">
-          <h3 className="font-semibold text-foreground mb-4 text-sm">Por Motivo de Bloqueio</h3>
+          <h3 className="font-semibold text-foreground mb-4 text-sm">Bloqueados por Linha de Estoque</h3>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
-              <Pie data={b.byReason.map(r => ({ name: r.reason, value: r.value / 1_000_000 }))} cx="50%" cy="50%" innerRadius={45} outerRadius={75} paddingAngle={3} dataKey="value">
-                {REASON_COLORS.map((c, i) => <Cell key={i} fill={c} />)}
+              <Pie data={b.byStockLine.map(s => ({ name: s.line, value: s.value / 1_000_000 }))} cx="50%" cy="50%" innerRadius={45} outerRadius={75} paddingAngle={3} dataKey="value">
+                {LINE_COLORS.map((c, i) => <Cell key={i} fill={c} />)}
               </Pie>
               <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number) => [`R$ ${v.toFixed(0)} mi`]} />
             </PieChart>
           </ResponsiveContainer>
           <div className="space-y-1.5 mt-2">
-            {b.byReason.map((r, i) => (
+            {b.byStockLine.map((s, i) => (
               <div key={i} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full" style={{ background: REASON_COLORS[i] }} />
-                  <span className="text-muted-foreground">{r.reason}</span>
+                  <div className="w-2 h-2 rounded-full" style={{ background: LINE_COLORS[i] }} />
+                  <span className="text-muted-foreground">{s.line}</span>
                 </div>
                 <div className="flex gap-3">
-                  <span className="text-muted-foreground">{formatNumber(r.items)} itens</span>
-                  <span className="text-foreground font-medium">{formatCurrency(r.value)}</span>
+                  <span className="text-muted-foreground">{formatNumber(s.items)} itens</span>
+                  <span className="text-foreground font-medium">{formatCurrency(s.value)}</span>
                 </div>
               </div>
             ))}
@@ -88,28 +73,25 @@ function BlockedView() {
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 16%)" horizontal={false} />
               <XAxis type="number" tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis type="category" dataKey="unit" width={100} tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number, name: string) => [name === "valorMi" ? `R$ ${v.toFixed(0)} mi` : formatNumber(v), name === "valorMi" ? "Valor" : "Itens"]} />
+              <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number) => [`R$ ${v.toFixed(0)} mi`]} />
               <Bar dataKey="valorMi" name="Valor (R$ mi)" fill="hsl(0, 72%, 51%)" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Por Linha de Estoque — stacked bar com motivos */}
+      {/* Barras por linha de estoque */}
       <div className="glass-card p-5">
-        <h3 className="font-semibold text-foreground mb-4 text-sm">Bloqueados por Linha de Estoque × Motivo (R$ mi)</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={stockLineData}>
+        <h3 className="font-semibold text-foreground mb-4 text-sm">Valor Bloqueado por Linha de Estoque (R$ mi)</h3>
+        <ResponsiveContainer width="100%" height={280}>
+          <BarChart data={b.byStockLine.map(s => ({ line: s.line, valorMi: s.value / 1_000_000, items: s.items }))}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 16%)" />
             <XAxis dataKey="line" tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 10 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 11 }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number) => [`R$ ${v.toFixed(0)} mi`]} />
-            <Legend wrapperStyle={{ fontSize: 10 }} />
-            <Bar dataKey="qualidade" name="Qualidade" stackId="a" fill={REASON_COLORS[0]} />
-            <Bar dataKey="inspecao" name="Inspeção" stackId="a" fill={REASON_COLORS[1]} />
-            <Bar dataKey="fiscal" name="Divergência Fiscal" stackId="a" fill={REASON_COLORS[2]} />
-            <Bar dataKey="avaria" name="Avaria" stackId="a" fill={REASON_COLORS[3]} />
-            <Bar dataKey="gerencial" name="Decisão Gerencial" stackId="a" fill={REASON_COLORS[4]} radius={[4, 4, 0, 0]} />
+            <Bar dataKey="valorMi" name="Valor (R$ mi)" fill="hsl(0, 72%, 55%)" radius={[4, 4, 0, 0]}>
+              {b.byStockLine.map((_, i) => <Cell key={i} fill={LINE_COLORS[i]} />)}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -124,24 +106,16 @@ function BlockedView() {
                 <th className="text-left py-2 pr-2">Linha</th>
                 <th className="text-right py-2 pr-2">Itens</th>
                 <th className="text-right py-2 pr-2">Valor Total</th>
-                <th className="text-right py-2 pr-2">Qualidade</th>
-                <th className="text-right py-2 pr-2">Inspeção</th>
-                <th className="text-right py-2 pr-2">Fiscal</th>
-                <th className="text-right py-2 pr-2">Avaria</th>
-                <th className="text-right py-2">Gerencial</th>
+                <th className="text-right py-2">% do Total</th>
               </tr>
             </thead>
             <tbody>
-              {b.byStockLine.map((s, i) => (
+              {b.byStockLine.map((s) => (
                 <tr key={s.line} className="border-b border-border/50 hover:bg-secondary/30">
                   <td className="py-1.5 pr-2 font-medium text-foreground">{s.line}</td>
                   <td className="py-1.5 pr-2 text-right text-muted-foreground">{formatNumber(s.items)}</td>
                   <td className="py-1.5 pr-2 text-right font-medium text-foreground">{formatCurrency(s.value)}</td>
-                  <td className="py-1.5 pr-2 text-right text-destructive">{formatCurrency(s.qualidade)}</td>
-                  <td className="py-1.5 pr-2 text-right text-warning">{formatCurrency(s.inspecao)}</td>
-                  <td className="py-1.5 pr-2 text-right text-primary">{formatCurrency(s.fiscal)}</td>
-                  <td className="py-1.5 pr-2 text-right text-muted-foreground">{formatCurrency(s.avaria)}</td>
-                  <td className="py-1.5 text-right text-muted-foreground">{formatCurrency(s.gerencial)}</td>
+                  <td className="py-1.5 text-right text-muted-foreground">{((s.value / b.value) * 100).toFixed(1)}%</td>
                 </tr>
               ))}
             </tbody>
@@ -153,11 +127,11 @@ function BlockedView() {
       <div className="glass-card p-5">
         <h3 className="font-semibold text-foreground mb-4 text-sm">Aging dos Materiais Bloqueados</h3>
         <ResponsiveContainer width="100%" height={220}>
-          <BarChart data={b.byAging.map(a => ({ range: a.range, valorMi: a.value / 1_000_000, items: a.items }))}>
+          <BarChart data={b.byAging.map(a => ({ range: a.range, valorMi: a.value / 1_000_000 }))}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 16%)" />
             <XAxis dataKey="range" tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 10 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 11 }} axisLine={false} tickLine={false} />
-            <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number, name: string) => [name === "valorMi" ? `R$ ${v.toFixed(0)} mi` : formatNumber(v), name === "valorMi" ? "Valor" : "Itens"]} />
+            <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number) => [`R$ ${v.toFixed(0)} mi`]} />
             <Bar dataKey="valorMi" name="Valor (R$ mi)" fill="hsl(0, 72%, 55%)" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
@@ -198,10 +172,10 @@ function ReversalsView() {
         </div>
       </div>
 
-      {/* Por tipo de movimento + Por linha */}
+      {/* Por tipo (donut) + Por linha */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="glass-card p-5">
-          <h3 className="font-semibold text-foreground mb-4 text-sm">Por Tipo de Movimento Estornado</h3>
+          <h3 className="font-semibold text-foreground mb-4 text-sm">Por Tipo de Estorno</h3>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
               <Pie data={r.byType.map(t => ({ name: t.type, value: t.value / 1_000_000 }))} cx="50%" cy="50%" innerRadius={45} outerRadius={75} paddingAngle={3} dataKey="value">
@@ -229,7 +203,7 @@ function ReversalsView() {
         <div className="glass-card p-5">
           <h3 className="font-semibold text-foreground mb-4 text-sm">Estornos por Linha de Estoque</h3>
           <ResponsiveContainer width="100%" height={260}>
-            <BarChart data={r.byStockLine.map(s => ({ line: s.line, valorMi: s.value / 1_000_000, items: s.items }))} layout="vertical">
+            <BarChart data={r.byStockLine.map(s => ({ line: s.line, valorMi: s.value / 1_000_000 }))} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 16%)" horizontal={false} />
               <XAxis type="number" tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis type="category" dataKey="line" width={120} tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 10 }} axisLine={false} tickLine={false} />
@@ -240,10 +214,10 @@ function ReversalsView() {
         </div>
       </div>
 
-      {/* Evolução mensal — Consumo x Baixa */}
+      {/* Evolução mensal — Consumo Ordem x Baixa CC */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="glass-card p-5">
-          <h3 className="font-semibold text-foreground mb-4 text-sm">Evolução Mensal — Consumo vs Baixa</h3>
+          <h3 className="font-semibold text-foreground mb-4 text-sm">Evolução Mensal — Consumo Ordem vs Baixa CC</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={evolutionData}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 16%)" />
@@ -251,8 +225,8 @@ function ReversalsView() {
               <YAxis tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 11 }} axisLine={false} tickLine={false} />
               <Tooltip contentStyle={TOOLTIP_STYLE} />
               <Legend wrapperStyle={{ fontSize: 10 }} />
-              <Bar dataKey="consumo" name="Est. Consumo" stackId="a" fill="hsl(0, 72%, 55%)" />
-              <Bar dataKey="baixa" name="Est. Baixa" stackId="a" fill="hsl(38, 92%, 50%)" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="consumo" name="Est. Consumo Ordem" stackId="a" fill="hsl(0, 72%, 55%)" />
+              <Bar dataKey="baixa" name="Est. Baixa CC" stackId="a" fill="hsl(38, 92%, 50%)" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -313,7 +287,6 @@ export default function BlockedPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Tab selector */}
       <div className="flex items-center gap-2">
         <button
           onClick={() => setActiveTab("blocked")}
