@@ -96,6 +96,41 @@ export const agingData = {
     avgCoverageMonths: 14.2,
     lowConsumptionPercent: 34.7,
     excessPercent: 22.1,
+    // Materiais críticos (risco operacional) - MABC M ou A, aging > 180
+    criticalMaterials: [
+      { code: "MRO-4521-BR", desc: "Rolamento Axial SKF 320mm", value: 4_200_000, aging: 847, criticality: "A", frequency: "Q", coverage: 22.4 },
+      { code: "MRO-1123-EL", desc: "Inversor Frequência ABB 500kW", value: 3_400_000, aging: 367, criticality: "A", frequency: "P", coverage: 18.1 },
+      { code: "MRO-7721-IN", desc: "Motor WEG W22 150cv", value: 2_900_000, aging: 498, criticality: "M", frequency: "Q", coverage: 14.7 },
+      { code: "MRO-3392-HY", desc: "Cilindro Hidráulico Rexroth 200t", value: 2_100_000, aging: 312, criticality: "A", frequency: "R", coverage: 11.3 },
+      { code: "MRO-5504-BG", desc: "Redutor Flender SZII 450kW", value: 1_850_000, aging: 278, criticality: "M", frequency: "P", coverage: 9.8 },
+      { code: "MRO-8810-VL", desc: "Válvula Controle Fisher DVC6200", value: 1_600_000, aging: 234, criticality: "A", frequency: "Q", coverage: 16.2 },
+      { code: "MRO-6623-TR", desc: "Transformador Siemens 13.8kV", value: 1_450_000, aging: 412, criticality: "M", frequency: "S", coverage: 24.5 },
+      { code: "MRO-2201-PM", desc: "Bomba KSB Megachem 65-250", value: 1_200_000, aging: 189, criticality: "A", frequency: "P", coverage: 7.2 },
+    ],
+    // Oportunidade de redução - baixa criticidade (B/C), baixo consumo (R/S), alto aging
+    reductionOpportunities: [
+      { code: "MRO-9912-GX", desc: "Gaxeta Teadit NA1122 DN150", value: 980_000, lastConsumption: "Mar 2025", aging: 423, action: "Desmobilizar" as const },
+      { code: "MRO-7734-CF", desc: "Correia Flat Continental 800mm", value: 870_000, lastConsumption: "Jan 2025", aging: 387, action: "Reduzir" as const },
+      { code: "MRO-4456-JT", desc: "Junta Espirotalada 6\" CL300", value: 720_000, lastConsumption: "Nov 2024", aging: 512, action: "Desmobilizar" as const },
+      { code: "MRO-1188-FT", desc: "Filtro Óleo Parker 10μm", value: 650_000, lastConsumption: "Abr 2025", aging: 298, action: "Reduzir" as const },
+      { code: "MRO-3367-RL", desc: "Rolo Guia Aço Inox 316L", value: 540_000, lastConsumption: "Dez 2024", aging: 467, action: "Desmobilizar" as const },
+      { code: "MRO-5589-CB", desc: "Cabo Controle Lapp 12x1.5mm", value: 420_000, lastConsumption: "Fev 2025", aging: 345, action: "Reduzir" as const },
+      { code: "MRO-8801-AN", desc: "Anel O-Ring Viton DN200", value: 380_000, lastConsumption: "Out 2024", aging: 534, action: "Desmobilizar" as const },
+      { code: "MRO-2245-PR", desc: "Parafuso ASTM A193 B7 M30", value: 310_000, lastConsumption: "Set 2024", aging: 578, action: "Desmobilizar" as const },
+    ],
+    // Top 10 maior valor parado
+    impactRanking: [
+      { code: "MRO-4521-BR", desc: "Rolamento Axial SKF 320mm", value: 4_200_000, aging: 847, risk: "Alto" as const },
+      { code: "MRO-1123-EL", desc: "Inversor Frequência ABB 500kW", value: 3_400_000, aging: 367, risk: "Alto" as const },
+      { code: "MRO-7721-IN", desc: "Motor WEG W22 150cv", value: 2_900_000, aging: 498, risk: "Alto" as const },
+      { code: "MRO-3392-HY", desc: "Cilindro Hidráulico Rexroth 200t", value: 2_100_000, aging: 312, risk: "Médio" as const },
+      { code: "MRO-5504-BG", desc: "Redutor Flender SZII 450kW", value: 1_850_000, aging: 278, risk: "Médio" as const },
+      { code: "MRO-8810-VL", desc: "Válvula Controle Fisher DVC6200", value: 1_600_000, aging: 234, risk: "Médio" as const },
+      { code: "MRO-6623-TR", desc: "Transformador Siemens 13.8kV", value: 1_450_000, aging: 412, risk: "Alto" as const },
+      { code: "MRO-2201-PM", desc: "Bomba KSB Megachem 65-250", value: 1_200_000, aging: 189, risk: "Baixo" as const },
+      { code: "MRO-9912-GX", desc: "Gaxeta Teadit NA1122 DN150", value: 980_000, aging: 423, risk: "Alto" as const },
+      { code: "MRO-7734-CF", desc: "Correia Flat Continental 800mm", value: 870_000, aging: 387, risk: "Médio" as const },
+    ],
     classification: {
       healthy: { value: 187_000_000, items: 3_940, percent: 36.0 },
       attention: { value: 198_000_000, items: 4_820, percent: 38.1 },

@@ -1,10 +1,9 @@
-import { useCallback } from "react";
 import {
   BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from "recharts";
 import { agingData, formatCurrency, formatNumber } from "@/data/mockData";
-import { AlertTriangle, TrendingDown, Shield, Activity } from "lucide-react";
+import { AlertTriangle, TrendingDown, Shield, Activity, Zap, PackageMinus } from "lucide-react";
 
 const COLORS = ["hsl(38, 92%, 50%)", "hsl(0, 72%, 51%)", "hsl(320, 60%, 50%)"];
 const MRO_CLASS_COLORS = {
@@ -26,9 +25,6 @@ const mroInsights = [
   `Materiais críticos representam ${mro.criticalPercent}% do valor MRO`,
   `Cobertura média de ${mro.avgCoverageMonths} meses indica sobreestoque`,
 ];
-
-// Custom tooltip for MRO line in bar chart
-const MROBarLabel = "MRO Industrial e Florestal";
 
 function CustomBarTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
@@ -55,27 +51,56 @@ function CustomBarTooltip({ active, payload, label }: any) {
   );
 }
 
-// Custom Y-axis tick to highlight MRO
 function CustomYTick({ x, y, payload }: any) {
   const isMRO = payload?.value?.includes("MRO");
   return (
     <g transform={`translate(${x},${y})`}>
       <text
-        x={-4}
-        y={0}
-        dy={4}
-        textAnchor="end"
-        fontSize={11}
+        x={-4} y={0} dy={4} textAnchor="end" fontSize={11}
         fill={isMRO ? "hsl(38, 92%, 50%)" : "hsl(215, 15%, 55%)"}
         fontWeight={isMRO ? 600 : 400}
       >
         {payload.value}
       </text>
-      {isMRO && (
-        <text x={-4} y={0} dy={4} dx={4} textAnchor="start" fontSize={10} fill="hsl(38, 92%, 50%)">
-        </text>
-      )}
     </g>
+  );
+}
+
+function CriticalityBadge({ level }: { level: string }) {
+  const colors: Record<string, string> = {
+    A: "bg-destructive/20 text-destructive",
+    M: "bg-warning/20 text-warning",
+    B: "bg-muted text-muted-foreground",
+    C: "bg-muted text-muted-foreground",
+  };
+  return (
+    <span className={`inline-flex items-center justify-center w-6 h-5 rounded text-[10px] font-bold ${colors[level] || "bg-muted text-muted-foreground"}`}>
+      {level}
+    </span>
+  );
+}
+
+function RiskBadge({ risk }: { risk: string }) {
+  const colors: Record<string, string> = {
+    Alto: "bg-destructive/20 text-destructive",
+    Médio: "bg-warning/20 text-warning",
+    Baixo: "bg-secondary text-muted-foreground",
+  };
+  return (
+    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold ${colors[risk] || ""}`}>
+      {risk}
+    </span>
+  );
+}
+
+function ActionBadge({ action }: { action: string }) {
+  const isReduce = action === "Reduzir";
+  return (
+    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+      isReduce ? "bg-warning/20 text-warning" : "bg-destructive/20 text-destructive"
+    }`}>
+      {action}
+    </span>
   );
 }
 
@@ -88,6 +113,9 @@ export default function AgingPage() {
     "365+": d["365+"] / 1_000_000,
     isMRO: d.line.includes("MRO"),
   }));
+
+  const totalImpactValue = mro.impactRanking.reduce((sum, m) => sum + m.value, 0);
+  const totalReductionValue = mro.reductionOpportunities.reduce((sum, m) => sum + m.value, 0);
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -152,46 +180,27 @@ export default function AgingPage() {
 
           {/* Classification donut + Insights */}
           <div className="grid grid-cols-2 gap-3">
-            {/* Donut */}
             <div>
               <p className="text-xs text-muted-foreground mb-2">Classificação Estratégica</p>
               <ResponsiveContainer width="100%" height={130}>
                 <PieChart>
-                  <Pie
-                    data={mroClassification}
-                    cx="50%" cy="50%" innerRadius={35} outerRadius={55}
-                    paddingAngle={3} dataKey="value"
-                  >
+                  <Pie data={mroClassification} cx="50%" cy="50%" innerRadius={35} outerRadius={55} paddingAngle={3} dataKey="value">
                     {mroClassification.map((entry, i) => (
                       <Cell key={i} fill={entry.color} />
                     ))}
                   </Pie>
                   <Tooltip
-                    contentStyle={{
-                      background: "hsl(0, 0%, 10%)",
-                      border: "1px solid hsl(0, 0%, 16%)",
-                      borderRadius: 8,
-                      color: "hsl(0, 0%, 95%)",
-                      fontSize: 11,
-                    }}
+                    contentStyle={{ background: "hsl(0, 0%, 10%)", border: "1px solid hsl(0, 0%, 16%)", borderRadius: 8, color: "hsl(0, 0%, 95%)", fontSize: 11 }}
                     formatter={(v: number) => [`${v}%`]}
                   />
                 </PieChart>
               </ResponsiveContainer>
               <div className="flex justify-center gap-3 text-[10px] text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full" style={{ background: MRO_CLASS_COLORS.healthy }} /> Saudável
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full" style={{ background: MRO_CLASS_COLORS.attention }} /> Atenção
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full" style={{ background: MRO_CLASS_COLORS.excess }} /> Excesso
-                </span>
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full" style={{ background: MRO_CLASS_COLORS.healthy }} /> Saudável</span>
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full" style={{ background: MRO_CLASS_COLORS.attention }} /> Atenção</span>
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full" style={{ background: MRO_CLASS_COLORS.excess }} /> Excesso</span>
               </div>
             </div>
-
-            {/* Insights */}
             <div>
               <p className="text-xs text-muted-foreground mb-2">Insights Automáticos</p>
               <div className="space-y-2">
@@ -206,7 +215,7 @@ export default function AgingPage() {
           </div>
         </div>
 
-        {/* Top materials table */}
+        {/* Top materials table (existing) */}
         <div className="glass-card p-5">
           <h3 className="font-semibold text-foreground mb-4">Materiais Mais Críticos</h3>
           <div className="overflow-auto max-h-72">
@@ -233,6 +242,143 @@ export default function AgingPage() {
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+
+      {/* ── MRO: Ação & Decisão ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Materiais Críticos (Risco Operacional) */}
+        <div className="glass-card p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <AlertTriangle className="w-4 h-4 text-destructive" />
+            <h3 className="font-semibold text-foreground">MRO — Risco Operacional</h3>
+            <span className="ml-auto text-[10px] text-muted-foreground">{mro.criticalMaterials.length} materiais</span>
+          </div>
+          <p className="text-[11px] text-muted-foreground mb-3">
+            Materiais de alta criticidade com aging elevado — risco de impacto operacional mesmo parados.
+          </p>
+          <div className="overflow-auto max-h-80">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="text-muted-foreground text-[10px] border-b border-border uppercase tracking-wider">
+                  <th className="text-left py-2 pr-1.5">Material</th>
+                  <th className="text-left py-2 pr-1.5">Descrição</th>
+                  <th className="text-right py-2 pr-1.5">Valor</th>
+                  <th className="text-right py-2 pr-1.5">Aging</th>
+                  <th className="text-center py-2 pr-1.5">Crit.</th>
+                  <th className="text-center py-2 pr-1.5">Freq.</th>
+                  <th className="text-right py-2">Cob.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {mro.criticalMaterials.map((m) => (
+                  <tr key={m.code} className="border-b border-border/50 hover:bg-secondary/30">
+                    <td className="py-1.5 pr-1.5 font-mono text-primary">{m.code}</td>
+                    <td className="py-1.5 pr-1.5 text-foreground/80 max-w-[140px] truncate">{m.desc}</td>
+                    <td className="py-1.5 pr-1.5 text-right font-medium text-foreground">{formatCurrency(m.value)}</td>
+                    <td className="py-1.5 pr-1.5 text-right">
+                      <span className={m.aging > 500 ? "text-destructive font-medium" : m.aging > 300 ? "text-warning" : "text-foreground"}>{m.aging}d</span>
+                    </td>
+                    <td className="py-1.5 pr-1.5 text-center"><CriticalityBadge level={m.criticality} /></td>
+                    <td className="py-1.5 pr-1.5 text-center text-muted-foreground">{m.frequency}</td>
+                    <td className="py-1.5 text-right text-muted-foreground">{m.coverage}m</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Oportunidade de Redução */}
+        <div className="glass-card p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <PackageMinus className="w-4 h-4 text-warning" />
+            <h3 className="font-semibold text-foreground">MRO — Oportunidade de Redução</h3>
+            <span className="ml-auto text-[10px] text-muted-foreground">{formatCurrency(totalReductionValue)}</span>
+          </div>
+          <p className="text-[11px] text-muted-foreground mb-3">
+            Materiais de baixa criticidade e baixo consumo — candidatos a redução ou desmobilização.
+          </p>
+          <div className="overflow-auto max-h-80">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="text-muted-foreground text-[10px] border-b border-border uppercase tracking-wider">
+                  <th className="text-left py-2 pr-1.5">Material</th>
+                  <th className="text-left py-2 pr-1.5">Descrição</th>
+                  <th className="text-right py-2 pr-1.5">Valor</th>
+                  <th className="text-center py-2 pr-1.5">Últ. Consumo</th>
+                  <th className="text-right py-2 pr-1.5">Aging</th>
+                  <th className="text-center py-2">Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {mro.reductionOpportunities.map((m) => (
+                  <tr key={m.code} className="border-b border-border/50 hover:bg-secondary/30">
+                    <td className="py-1.5 pr-1.5 font-mono text-primary">{m.code}</td>
+                    <td className="py-1.5 pr-1.5 text-foreground/80 max-w-[140px] truncate">{m.desc}</td>
+                    <td className="py-1.5 pr-1.5 text-right font-medium text-foreground">{formatCurrency(m.value)}</td>
+                    <td className="py-1.5 pr-1.5 text-center text-muted-foreground">{m.lastConsumption}</td>
+                    <td className="py-1.5 pr-1.5 text-right">
+                      <span className={m.aging > 400 ? "text-destructive font-medium" : "text-warning"}>{m.aging}d</span>
+                    </td>
+                    <td className="py-1.5 text-center"><ActionBadge action={m.action} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* Ranking de Impacto */}
+      <div className="glass-card p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Zap className="w-4 h-4 text-warning" />
+          <h3 className="font-semibold text-foreground">MRO — Ranking de Impacto</h3>
+          <span className="ml-auto text-xs text-muted-foreground">Top 10 · {formatCurrency(totalImpactValue)} em estoque parado</span>
+        </div>
+        <div className="overflow-auto">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="text-muted-foreground text-[10px] border-b border-border uppercase tracking-wider">
+                <th className="text-center py-2 pr-2 w-8">#</th>
+                <th className="text-left py-2 pr-2">Material</th>
+                <th className="text-left py-2 pr-2">Descrição</th>
+                <th className="text-right py-2 pr-2">Valor</th>
+                <th className="text-right py-2 pr-2">Aging</th>
+                <th className="text-center py-2 pr-2">Risco</th>
+                <th className="text-left py-2">Impacto</th>
+              </tr>
+            </thead>
+            <tbody>
+              {mro.impactRanking.map((m, i) => {
+                const barWidth = (m.value / mro.impactRanking[0].value) * 100;
+                return (
+                  <tr key={m.code} className="border-b border-border/50 hover:bg-secondary/30">
+                    <td className="py-1.5 pr-2 text-center text-muted-foreground font-medium">{i + 1}</td>
+                    <td className="py-1.5 pr-2 font-mono text-primary">{m.code}</td>
+                    <td className="py-1.5 pr-2 text-foreground/80 max-w-[180px] truncate">{m.desc}</td>
+                    <td className="py-1.5 pr-2 text-right font-medium text-foreground">{formatCurrency(m.value)}</td>
+                    <td className="py-1.5 pr-2 text-right">
+                      <span className={m.aging > 400 ? "text-destructive font-medium" : m.aging > 250 ? "text-warning" : "text-foreground"}>{m.aging}d</span>
+                    </td>
+                    <td className="py-1.5 pr-2 text-center"><RiskBadge risk={m.risk} /></td>
+                    <td className="py-1.5 w-24">
+                      <div className="w-full bg-secondary/50 rounded-full h-1.5">
+                        <div
+                          className="h-1.5 rounded-full transition-all"
+                          style={{
+                            width: `${barWidth}%`,
+                            background: m.risk === "Alto" ? "hsl(0, 72%, 51%)" : m.risk === "Médio" ? "hsl(38, 92%, 50%)" : "hsl(0, 0%, 50%)",
+                          }}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
