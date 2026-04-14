@@ -419,12 +419,56 @@ export const blockedData = {
 
 // Volumetry & inventory
 export const volumetryData = {
-  lines: stockDistribution.map((s, i) => ({
-    ...s,
-    inventoried: [78, 71, 82, 69, 65, 58, 74, 63, 52, 80][i],
-    notInventoried: [22, 29, 18, 31, 35, 42, 26, 37, 48, 20][i],
-    annualBase: [95, 88, 92, 84, 78, 72, 86, 70, 65, 90][i],
-  })),
+  kpis: {
+    total: 315,
+    emAndamento: 27,
+    naoIniciados: 260,
+    finalizados: 28,
+  },
+  regions: [
+    {
+      name: "Região Norte",
+      states: ["Pará"],
+      programados: 16,
+      concluidos: 0,
+    },
+    {
+      name: "Região Nordeste",
+      states: ["Bahia", "Ceará", "Maranhão"],
+      programados: 80,
+      concluidos: 6,
+    },
+    {
+      name: "Região Centro-Oeste",
+      states: ["Mato Grosso do Sul"],
+      programados: 78,
+      concluidos: 1,
+    },
+    {
+      name: "Região Sudeste",
+      states: ["Espírito Santo", "Minas Gerais", "São Paulo"],
+      programados: 120,
+      concluidos: 9,
+    },
+    {
+      name: "Região Sul",
+      states: ["Paraná"],
+      programados: 5,
+      concluidos: 0,
+    },
+  ],
+  cronograma: [
+    { uf: "BA", meses: [{ prev: 0, pend: 0, real: 0 }, { prev: 1, pend: 1, real: 0 }, { prev: 1, pend: 1, real: 0 }, { prev: 4, pend: 4, real: 0 }, { prev: 5, pend: 5, real: 0 }, { prev: 3, pend: 3, real: 0 }] },
+    { uf: "CE", meses: [{ prev: 0, pend: 0, real: 0 }, { prev: 0, pend: 0, real: 0 }, { prev: 0, pend: 0, real: 0 }, { prev: 0, pend: 0, real: 0 }, { prev: 4, pend: 4, real: 0 }, { prev: 3, pend: 3, real: 0 }] },
+    { uf: "ES", meses: [{ prev: 0, pend: 0, real: 0 }, { prev: 2, pend: 2, real: 0 }, { prev: 2, pend: 2, real: 0 }, { prev: 0, pend: 0, real: 0 }, { prev: 4, pend: 4, real: 0 }, { prev: 3, pend: 3, real: 0 }] },
+    { uf: "MA", meses: [{ prev: 6, pend: 0, real: 6 }, { prev: 2, pend: 2, real: 0 }, { prev: 5, pend: 1, real: 4 }, { prev: 13, pend: 13, real: 0 }, { prev: 4, pend: 4, real: 0 }, { prev: 3, pend: 3, real: 0 }] },
+    { uf: "MG", meses: [{ prev: 0, pend: 0, real: 0 }, { prev: 0, pend: 0, real: 0 }, { prev: 1, pend: 1, real: 0 }, { prev: 1, pend: 1, real: 0 }, { prev: 4, pend: 4, real: 0 }, { prev: 4, pend: 4, real: 0 }] },
+    { uf: "MS", meses: [{ prev: 3, pend: 1, real: 2 }, { prev: 14, pend: 14, real: 0 }, { prev: 8, pend: 8, real: 0 }, { prev: 13, pend: 13, real: 0 }, { prev: 8, pend: 8, real: 0 }, { prev: 2, pend: 2, real: 0 }] },
+    { uf: "PA", meses: [{ prev: 0, pend: 0, real: 0 }, { prev: 1, pend: 1, real: 0 }, { prev: 3, pend: 0, real: 3 }, { prev: 0, pend: 0, real: 0 }, { prev: 0, pend: 0, real: 0 }, { prev: 2, pend: 2, real: 0 }] },
+    { uf: "PR", meses: [{ prev: 0, pend: 0, real: 0 }, { prev: 0, pend: 0, real: 0 }, { prev: 0, pend: 0, real: 0 }, { prev: 0, pend: 0, real: 0 }, { prev: 0, pend: 0, real: 0 }, { prev: 3, pend: 3, real: 0 }] },
+    { uf: "SP", meses: [{ prev: 9, pend: 0, real: 9 }, { prev: 11, pend: 7, real: 4 }, { prev: 17, pend: 17, real: 0 }, { prev: 9, pend: 9, real: 0 }, { prev: 11, pend: 11, real: 0 }, { prev: 2, pend: 2, real: 0 }] },
+  ],
+  monthLabels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho"],
   monthlyEvolution: [
     { month: "Jan", covered: 8.2 },
     { month: "Fev", covered: 16.1 },
