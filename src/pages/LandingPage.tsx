@@ -62,10 +62,9 @@ export default function LandingPage() {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-2xl px-6">
         {/* Title */}
-        <div className="flex items-center gap-8 mb-8">
-          <img src={smartKapitalLogo} alt="Smart Kapital" className="h-28 object-contain" />
-          
-          <img src={sgsLogoGreen} alt="SGS Gestão de Inventários" className="h-28 object-contain" />
+        <div className="flex items-center gap-4 mb-8">
+          <img src={smartKapitalLogo} alt="Smart Kapital" className="h-36 object-contain" />
+          <img src={sgsLogoGreen} alt="SGS Gestão de Inventários" className="h-36 object-contain" />
         </div>
         <h1 className="text-5xl md:text-6xl font-light text-foreground tracking-tight text-center mb-3">
           Smart Kapital <span className="font-light">IA.</span>
