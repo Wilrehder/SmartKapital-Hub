@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecionando...</title>
+    <script>
+      // GitHub Pages SPA fallback
+      sessionStorage.redirect = location.href;
+      location.replace(
+        location.pathname.split('/').slice(0, 2).join('/') + '/'
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
