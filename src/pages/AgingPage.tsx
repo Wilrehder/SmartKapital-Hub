@@ -3,7 +3,7 @@ import {
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from "recharts";
 import { agingData, formatCurrency, formatNumber } from "@/data/mockData";
-import { AlertTriangle, TrendingDown, Shield, Activity, Zap, PackageMinus } from "lucide-react";
+import { AlertTriangle, TrendingDown, Shield, Activity, Zap, PackageMinus, Factory, TreePine } from "lucide-react";
 
 const COLORS = ["hsl(38, 92%, 50%)", "hsl(0, 72%, 51%)", "hsl(320, 60%, 50%)"];
 const MRO_CLASS_COLORS = {
@@ -66,16 +66,14 @@ function CustomYTick({ x, y, payload }: any) {
   );
 }
 
-function CriticalityBadge({ level }: { level: string }) {
-  const colors: Record<string, string> = {
-    A: "bg-destructive/20 text-destructive",
-    M: "bg-warning/20 text-warning",
-    B: "bg-muted text-muted-foreground",
-    C: "bg-muted text-muted-foreground",
-  };
+function TypeBadge({ type }: { type: string }) {
+  const isIndustrial = type === "Industrial";
   return (
-    <span className={`inline-flex items-center justify-center w-6 h-5 rounded text-[10px] font-bold ${colors[level] || "bg-muted text-muted-foreground"}`}>
-      {level}
+    <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+      isIndustrial ? "bg-primary/20 text-primary" : "bg-emerald-500/20 text-emerald-400"
+    }`}>
+      {isIndustrial ? <Factory className="w-2.5 h-2.5" /> : <TreePine className="w-2.5 h-2.5" />}
+      {type}
     </span>
   );
 }
@@ -115,7 +113,7 @@ export default function AgingPage() {
   }));
 
   const totalImpactValue = mro.impactRanking.reduce((sum, m) => sum + m.value, 0);
-  const totalReductionValue = mro.reductionOpportunities.reduce((sum, m) => sum + m.value, 0);
+  const totalReductionValue = mro.reductionByUnit.reduce((sum, m) => sum + m.value, 0);
 
   return (
     <div className="space-y-6 animate-fade-in">
