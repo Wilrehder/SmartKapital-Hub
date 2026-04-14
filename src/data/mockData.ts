@@ -88,6 +88,20 @@ export const agingData = {
     strategic: { value: 312_000_000, items: 8_420, percent: 60.2 },
     reduction: { value: 208_000_000, items: 5_630, percent: 39.8 },
   },
+  mroIntelligence: {
+    totalValue: 520_000_000,
+    percentOfAging: 38.8,
+    above180Percent: 59.6,
+    criticalPercent: 42.3,
+    avgCoverageMonths: 14.2,
+    lowConsumptionPercent: 34.7,
+    excessPercent: 22.1,
+    classification: {
+      healthy: { value: 187_000_000, items: 3_940, percent: 36.0 },
+      attention: { value: 198_000_000, items: 4_820, percent: 38.1 },
+      excess: { value: 135_000_000, items: 5_290, percent: 25.9 },
+    },
+  },
   topMaterials: [
     { code: "MRO-4521-BR", desc: "Rolamento Axial SKF 320mm", unit: "Unidade Três Lagoas", days: 847, value: 4_200_000, curve: "A" },
     { code: "INS-8834-FL", desc: "Resina Catiônica Premium", unit: "Unidade Imperatriz", days: 623, value: 3_800_000, curve: "A" },

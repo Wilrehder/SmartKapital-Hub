@@ -1,17 +1,92 @@
+import { useCallback } from "react";
 import {
   BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from "recharts";
 import { agingData, formatCurrency, formatNumber } from "@/data/mockData";
+import { AlertTriangle, TrendingDown, Shield, Activity } from "lucide-react";
 
 const COLORS = ["hsl(38, 92%, 50%)", "hsl(0, 72%, 51%)", "hsl(320, 60%, 50%)"];
+const MRO_CLASS_COLORS = {
+  healthy: "hsl(142, 60%, 45%)",
+  attention: "hsl(38, 92%, 50%)",
+  excess: "hsl(0, 72%, 51%)",
+};
+
+const mro = agingData.mroIntelligence;
+const mroClassification = [
+  { name: "Saudável", value: mro.classification.healthy.percent, color: MRO_CLASS_COLORS.healthy },
+  { name: "Atenção", value: mro.classification.attention.percent, color: MRO_CLASS_COLORS.attention },
+  { name: "Excesso", value: mro.classification.excess.percent, color: MRO_CLASS_COLORS.excess },
+];
+
+const mroInsights = [
+  `${formatCurrency(mro.classification.excess.value)} em MRO com baixo consumo e alto aging`,
+  `${mro.above180Percent}% do MRO está acima de 180 dias`,
+  `Materiais críticos representam ${mro.criticalPercent}% do valor MRO`,
+  `Cobertura média de ${mro.avgCoverageMonths} meses indica sobreestoque`,
+];
+
+// Custom tooltip for MRO line in bar chart
+const MROBarLabel = "MRO Industrial e Florestal";
+
+function CustomBarTooltip({ active, payload, label }: any) {
+  if (!active || !payload?.length) return null;
+  const isMRO = label?.includes("MRO");
+
+  return (
+    <div className="rounded-lg border border-border/50 bg-popover px-3 py-2 text-xs shadow-xl">
+      <p className="font-medium text-foreground mb-1.5">{label}</p>
+      {payload.map((p: any) => (
+        <div key={p.dataKey} className="flex justify-between gap-4 text-muted-foreground">
+          <span>{p.name}</span>
+          <span className="font-medium text-foreground">R$ {p.value.toFixed(0)} mi</span>
+        </div>
+      ))}
+      {isMRO && (
+        <div className="mt-2 pt-2 border-t border-border/50 space-y-1 text-muted-foreground">
+          <div className="flex justify-between"><span>Cobertura média</span><span className="text-foreground">{mro.avgCoverageMonths} meses</span></div>
+          <div className="flex justify-between"><span>Materiais críticos</span><span className="text-foreground">{mro.criticalPercent}%</span></div>
+          <div className="flex justify-between"><span>Baixo consumo</span><span className="text-foreground">{mro.lowConsumptionPercent}%</span></div>
+          <div className="flex justify-between"><span>Classificado excesso</span><span className="text-destructive">{mro.excessPercent}%</span></div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Custom Y-axis tick to highlight MRO
+function CustomYTick({ x, y, payload }: any) {
+  const isMRO = payload?.value?.includes("MRO");
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text
+        x={-4}
+        y={0}
+        dy={4}
+        textAnchor="end"
+        fontSize={11}
+        fill={isMRO ? "hsl(38, 92%, 50%)" : "hsl(215, 15%, 55%)"}
+        fontWeight={isMRO ? 600 : 400}
+      >
+        {payload.value}
+      </text>
+      {isMRO && (
+        <text x={-4} y={0} dy={4} dx={4} textAnchor="start" fontSize={10} fill="hsl(38, 92%, 50%)">
+        </text>
+      )}
+    </g>
+  );
+}
 
 export default function AgingPage() {
   const byLine = agingData.byLine.map(d => ({
     line: d.line.length > 18 ? d.line.slice(0, 18) + "…" : d.line,
+    fullLine: d.line,
     "120-180": d["120-180"] / 1_000_000,
     "181-365": d["181-365"] / 1_000_000,
     "365+": d["365+"] / 1_000_000,
+    isMRO: d.line.includes("MRO"),
   }));
 
   return (
@@ -30,15 +105,15 @@ export default function AgingPage() {
         ))}
       </div>
 
-      {/* By line chart */}
+      {/* By line chart with MRO highlight */}
       <div className="glass-card p-5">
         <h3 className="font-semibold text-foreground mb-4">Aging por Linha de Estoque (R$ mi)</h3>
         <ResponsiveContainer width="100%" height={350}>
           <BarChart data={byLine} layout="vertical">
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 14%, 18%)" horizontal={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 16%)" horizontal={false} />
             <XAxis type="number" tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 11 }} axisLine={false} tickLine={false} />
-            <YAxis type="category" dataKey="line" width={160} tick={{ fill: "hsl(215, 15%, 55%)", fontSize: 11 }} axisLine={false} tickLine={false} />
-            <Tooltip contentStyle={{ background: "hsl(220, 18%, 12%)", border: "1px solid hsl(220, 14%, 18%)", borderRadius: 8, color: "hsl(210, 20%, 95%)" }} formatter={(v: number) => [`R$ ${v.toFixed(0)} mi`]} />
+            <YAxis type="category" dataKey="line" width={160} tick={<CustomYTick />} axisLine={false} tickLine={false} />
+            <Tooltip content={<CustomBarTooltip />} cursor={{ fill: "hsl(0, 0%, 12%)" }} />
             <Bar dataKey="120-180" name="120–180 dias" stackId="a" fill={COLORS[0]} />
             <Bar dataKey="181-365" name="181–365 dias" stackId="a" fill={COLORS[1]} />
             <Bar dataKey="365+" name="365+ dias" stackId="a" fill={COLORS[2]} radius={[0, 4, 4, 0]} />
@@ -46,28 +121,88 @@ export default function AgingPage() {
         </ResponsiveContainer>
       </div>
 
-      {/* MRO strategic vs reduction */}
+      {/* MRO Strategic Vision + Top Materials */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="glass-card p-5">
-          <h3 className="font-semibold text-foreground mb-4">MRO — Estratégico vs Redução</h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <PieChart>
-              <Pie
-                data={[
-                  { name: "Estratégico", value: agingData.mroStrategic.strategic.percent },
-                  { name: "Oportunidade de redução", value: agingData.mroStrategic.reduction.percent },
-                ]}
-                cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3} dataKey="value"
-              >
-                <Cell fill="hsl(213, 70%, 50%)" />
-                <Cell fill="hsl(38, 92%, 50%)" />
-              </Pie>
-              <Tooltip contentStyle={{ background: "hsl(220, 18%, 12%)", border: "1px solid hsl(220, 14%, 18%)", borderRadius: 8, color: "hsl(210, 20%, 95%)" }} />
-            </PieChart>
-          </ResponsiveContainer>
-          <div className="flex justify-center gap-6 mt-2 text-sm">
-            <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-primary" /> Estratégico: {formatCurrency(agingData.mroStrategic.strategic.value)}</div>
-            <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-warning" /> Redução: {formatCurrency(agingData.mroStrategic.reduction.value)}</div>
+        {/* MRO — Visão Estratégica */}
+        <div className="glass-card p-5 space-y-4">
+          <div className="flex items-center gap-2">
+            <Shield className="w-4 h-4 text-warning" />
+            <h3 className="font-semibold text-foreground">MRO — Visão Estratégica</h3>
+          </div>
+
+          {/* Mini indicator cards */}
+          <div className="grid grid-cols-2 gap-2">
+            <div className="rounded-lg bg-secondary/50 px-3 py-2">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Valor Total MRO</p>
+              <p className="text-sm font-bold text-foreground">{formatCurrency(mro.totalValue)}</p>
+            </div>
+            <div className="rounded-lg bg-secondary/50 px-3 py-2">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">% do Aging Total</p>
+              <p className="text-sm font-bold text-foreground">{mro.percentOfAging}%</p>
+            </div>
+            <div className="rounded-lg bg-secondary/50 px-3 py-2">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Acima de 180 dias</p>
+              <p className="text-sm font-bold text-warning">{mro.above180Percent}%</p>
+            </div>
+            <div className="rounded-lg bg-secondary/50 px-3 py-2">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Materiais Críticos</p>
+              <p className="text-sm font-bold text-destructive">{mro.criticalPercent}%</p>
+            </div>
+          </div>
+
+          {/* Classification donut + Insights */}
+          <div className="grid grid-cols-2 gap-3">
+            {/* Donut */}
+            <div>
+              <p className="text-xs text-muted-foreground mb-2">Classificação Estratégica</p>
+              <ResponsiveContainer width="100%" height={130}>
+                <PieChart>
+                  <Pie
+                    data={mroClassification}
+                    cx="50%" cy="50%" innerRadius={35} outerRadius={55}
+                    paddingAngle={3} dataKey="value"
+                  >
+                    {mroClassification.map((entry, i) => (
+                      <Cell key={i} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      background: "hsl(0, 0%, 10%)",
+                      border: "1px solid hsl(0, 0%, 16%)",
+                      borderRadius: 8,
+                      color: "hsl(0, 0%, 95%)",
+                      fontSize: 11,
+                    }}
+                    formatter={(v: number) => [`${v}%`]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="flex justify-center gap-3 text-[10px] text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full" style={{ background: MRO_CLASS_COLORS.healthy }} /> Saudável
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full" style={{ background: MRO_CLASS_COLORS.attention }} /> Atenção
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full" style={{ background: MRO_CLASS_COLORS.excess }} /> Excesso
+                </span>
+              </div>
+            </div>
+
+            {/* Insights */}
+            <div>
+              <p className="text-xs text-muted-foreground mb-2">Insights Automáticos</p>
+              <div className="space-y-2">
+                {mroInsights.map((insight, i) => (
+                  <div key={i} className="flex items-start gap-1.5">
+                    <Activity className="w-3 h-3 mt-0.5 shrink-0 text-warning" />
+                    <p className="text-[11px] leading-tight text-foreground/80">{insight}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
