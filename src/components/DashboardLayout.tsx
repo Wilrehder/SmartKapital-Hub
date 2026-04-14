@@ -11,7 +11,7 @@ import { kpis, alerts } from "@/data/mockData";
 
 const menuItems = [
   { path: "/dashboard", label: "Visão Geral", icon: LayoutDashboard },
-  { path: "/aging", label: "Aging 120+ dias", icon: Clock },
+  { path: "/aging", label: "Aging de Materiais", icon: Clock },
   { path: "/supplier", label: "Materiais no Fornecedor", icon: Truck },
   { path: "/wood", label: "Madeira e Mudas", icon: TreePine },
   { path: "/tpec", label: "Sinistro / TPEC", icon: AlertTriangle },
