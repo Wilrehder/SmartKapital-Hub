@@ -7,7 +7,7 @@ import {
   DollarSign, Package, Clock, BarChart3, Lock, AlertTriangle,
   MapPin, Bell, TrendingUp, TrendingDown, ArrowRight
 } from "lucide-react";
-import smartKapitalAiIcon from "@/assets/smart-kapital-ai-icon.png";
+import smartCapitalAiIcon from "@/assets/smart-kapital-ai-icon.png";
 import {
   kpis, stockDistribution, monthlyTrend, alerts,
   formatCurrency, formatNumber
@@ -200,11 +200,11 @@ export default function OverviewPage() {
         <div className="glass-card p-5 glow-blue">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 rounded-lg bg-primary/10">
-              <img src={smartKapitalAiIcon} alt="Smart Kapital AI" className="w-5 h-5 object-contain" />
+              <img src={smartCapitalAiIcon} alt="Smart Capital AI" className="w-5 h-5 object-contain" />
             </div>
             <div>
               <h3 className="font-semibold text-foreground">Agente de IA</h3>
-              <p className="text-xs text-muted-foreground"><p className="text-xs text-muted-foreground">Copiloto analítico Smart Kapital Hub</p></p>
+              <p className="text-xs text-muted-foreground">Copiloto analítico Smart Capital AI</p>
             </div>
           </div>
           <div className="space-y-3 mb-4">

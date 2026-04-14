@@ -1,6 +1,6 @@
 import { useState } from "react";
 import sgsLogoInventarios from "@/assets/sgs-logo-inventarios.png";
-import smartKapitalAiIcon from "@/assets/smart-kapital-ai-icon.png";
+import smartCapitalAiIcon from "@/assets/smart-kapital-ai-icon.png";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, Clock, Truck, TreePine, AlertTriangle,
@@ -17,7 +17,7 @@ const menuItems = [
   { path: "/tpec", label: "TPEC", icon: AlertTriangle },
   { path: "/blocked", label: "Bloqueados e Estornos", icon: Lock },
   { path: "/volumetry", label: "Volumetria e Inventário", icon: BarChart3 },
-  { path: "/ai-agent", label: "Smart Kapital AI", icon: null, customIcon: true },
+  { path: "/ai-agent", label: "Smart Capital AI", icon: null, customIcon: true },
 ];
 
 export default function DashboardLayout() {
@@ -38,7 +38,7 @@ export default function DashboardLayout() {
           <img src={sgsLogoInventarios} alt="SGS Gestão de Inventários" className="w-20 h-20 flex-shrink-0 object-scale-down" />
           {!collapsed && (
             <span className="font-bold text-foreground text-lg tracking-tight">
-              Smart <span className="gradient-text">Kapital</span>
+              Smart <span className="gradient-text">Capital</span>
             </span>
           )}
         </div>
@@ -60,7 +60,7 @@ export default function DashboardLayout() {
                 title={collapsed ? item.label : undefined}
               >
                 {item.customIcon ? (
-                  <img src={smartKapitalAiIcon} alt="Smart Kapital AI" className="w-5 h-5 flex-shrink-0 object-contain" />
+                  <img src={smartCapitalAiIcon} alt="Smart Capital AI" className="w-5 h-5 flex-shrink-0 object-contain" />
                 ) : (
                   item.icon && <item.icon className="w-5 h-5 flex-shrink-0" />
                 )}
@@ -85,7 +85,7 @@ export default function DashboardLayout() {
         <header className="h-16 border-b border-border flex items-center justify-between px-6 bg-card/50 backdrop-blur-sm">
           <div className="flex items-center gap-4">
             <h1 className="text-lg font-semibold text-foreground">
-              {menuItems.find(m => m.path === location.pathname)?.label || "Smart Kapital"}
+              {menuItems.find(m => m.path === location.pathname)?.label || "Smart Capital"}
             </h1>
           </div>
           <div className="flex items-center gap-4">

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Send, LayoutDashboard } from "lucide-react";
-import smartKapitalLogo from "@/assets/smart-kapital-particle.png";
+import smartCapitalLogo from "@/assets/smart-kapital-particle.png";
 import sgsLogoGreen from "@/assets/sgs-logo-green.png";
 
 interface Message {
@@ -67,9 +67,9 @@ export default function LandingPage() {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-2xl px-6">
         {/* Smart Kapital logo centered */}
-        <img src={smartKapitalLogo} alt="Smart Kapital" className="h-44 object-contain mb-6" />
+        <img src={smartCapitalLogo} alt="Smart Capital" className="h-44 object-contain mb-6" />
         <h1 className="text-5xl md:text-6xl font-light text-foreground tracking-tight text-center mb-3">
-          Smart Kapital <span className="font-light">AI.</span>
+          Smart Capital <span className="font-light">AI.</span>
         </h1>
         <p className="text-muted-foreground text-sm md:text-base text-center mb-10">
           Inteligência analítica para gestão de capital de giro e estoque.
