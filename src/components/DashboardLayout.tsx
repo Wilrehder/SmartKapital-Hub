@@ -97,6 +97,13 @@ export default function DashboardLayout() {
                 className="h-9 pl-9 pr-4 rounded-lg bg-secondary border-none text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary w-64"
               />
             </div>
+            <button
+              onClick={() => navigate("/")}
+              className="p-2 rounded-lg hover:bg-secondary transition-colors"
+              title="Tela Inicial"
+            >
+              <Home className="w-5 h-5 text-muted-foreground" />
+            </button>
             <button className="relative p-2 rounded-lg hover:bg-secondary transition-colors">
               <Bell className="w-5 h-5 text-muted-foreground" />
               {criticalCount > 0 && (
