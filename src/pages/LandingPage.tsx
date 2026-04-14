@@ -52,9 +52,9 @@ export default function LandingPage() {
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background">
       {/* Pulsing radial background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[radial-gradient(circle,_hsl(0_0%_25%)_0%,_transparent_70%)] animate-landing-pulse opacity-40" />
-        <div className="absolute top-[30%] left-[30%] w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,_hsl(0_0%_20%)_0%,_transparent_70%)] animate-landing-pulse-delayed opacity-30" />
-        <div className="absolute top-[60%] left-[60%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,_hsl(0_0%_18%)_0%,_transparent_70%)] animate-landing-pulse opacity-25" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[radial-gradient(circle,_hsl(0_0%_35%)_0%,_transparent_65%)] animate-landing-drift-1 opacity-60" />
+        <div className="absolute top-[30%] left-[30%] w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,_hsl(0_0%_30%)_0%,_transparent_65%)] animate-landing-drift-2 opacity-50" />
+        <div className="absolute top-[60%] left-[60%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,_hsl(0_0%_28%)_0%,_transparent_65%)] animate-landing-drift-3 opacity-45" />
       </div>
 
       {/* Content */}
@@ -64,7 +64,7 @@ export default function LandingPage() {
           <Bot className="w-10 h-10 text-foreground" />
         </div>
         <h1 className="text-5xl md:text-6xl font-light text-foreground tracking-tight text-center mb-3">
-          Smart Kapital <span className="font-semibold">IA.</span>
+          Smart Kapital <span className="font-light">IA.</span>
         </h1>
         <p className="text-muted-foreground text-sm md:text-base text-center mb-10">
           Inteligência analítica para gestão de capital de giro e estoque.
