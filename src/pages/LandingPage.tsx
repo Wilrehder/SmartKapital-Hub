@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Send, LayoutDashboard, Bot } from "lucide-react";
+import { Send, LayoutDashboard } from "lucide-react";
+import smartKapitalLogo from "@/assets/smart-kapital-logo.png";
 
 interface Message {
   role: "user" | "assistant";
@@ -60,8 +61,8 @@ export default function LandingPage() {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-2xl px-6">
         {/* Title */}
-        <div className="flex items-center gap-3 mb-2">
-          <Bot className="w-10 h-10 text-foreground" />
+        <div className="flex items-center gap-3 mb-4">
+          <img src={smartKapitalLogo} alt="Smart Kapital" className="h-16 object-contain" />
         </div>
         <h1 className="text-5xl md:text-6xl font-light text-foreground tracking-tight text-center mb-3">
           Smart Kapital <span className="font-light">IA.</span>
