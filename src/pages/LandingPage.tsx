@@ -54,7 +54,7 @@ export default function LandingPage() {
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background">
       {/* SGS logo top-right corner */}
       <div className="absolute top-6 right-8 z-20">
-        <img src={sgsLogoGreen} alt="SGS Gestão de Inventários" className="h-20 object-contain" />
+        <img src={sgsLogoGreen} alt="SGS Gestão de Inventários" className="h-32 object-contain" />
       </div>
 
       {/* Pulsing radial background */}
