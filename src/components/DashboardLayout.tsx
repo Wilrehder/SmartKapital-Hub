@@ -14,7 +14,7 @@ const menuItems = [
   { path: "/aging", label: "Aging 120+ dias", icon: Clock },
   { path: "/supplier", label: "Materiais no Fornecedor", icon: Truck },
   { path: "/wood", label: "Madeira e Mudas", icon: TreePine },
-  { path: "/tpec", label: "TPEC", icon: AlertTriangle },
+  { path: "/tpec", label: "Sinistro / TPEC", icon: AlertTriangle },
   { path: "/blocked", label: "Bloqueados e Estornos", icon: Lock },
   { path: "/volumetry", label: "Volumetria e Inventário", icon: BarChart3 },
   { path: "/ai-agent", label: "Smart Capital AI", icon: null, customIcon: true },
