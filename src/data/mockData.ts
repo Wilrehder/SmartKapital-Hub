@@ -262,22 +262,82 @@ export const woodAndSeedlings = {
   },
 };
 
-// TPEC
+// TPEC — Materiais de Sinistro aguardando baixa
 export const tpecData = {
-  total: 4_213,
-  totalValue: 156_000_000,
-  avgDays: 134,
-  byUnit: units.slice(0, 6).map((unit, i) => ({
-    unit,
-    items: [980, 820, 710, 640, 560, 503][i],
-    value: [38, 32, 27, 23, 19, 17][i] * 1_000_000,
-    avgDays: [156, 142, 128, 118, 134, 112][i],
-  })),
-  topMaterials: [
-    { code: "PAP-8812-KR", desc: "Bobina Offset 90g Avariada", unit: "Unidade Imperatriz", days: 312, value: 2_800_000 },
-    { code: "PAP-6634-CW", desc: "Papel Cartão 250g Sinistrado", unit: "Unidade Três Lagoas", days: 287, value: 2_400_000 },
-    { code: "PAP-2219-LB", desc: "Kraft Liner 170g Danificado", unit: "Unidade Mucuri", days: 256, value: 1_900_000 },
-    { code: "PAP-4451-RX", desc: "Tissue Base 15g Contaminado", unit: "Unidade Suzano", days: 234, value: 1_600_000 },
+  // KPIs
+  estDispoKg: 375_000,
+  estDispoMoM: 397_000,
+  estDispoVar: -5.59,
+  estDispoAcima90d: 183_000,
+  estDispoAcima90dMoM: 178_000,
+  estDispoAcima90dVar: 2.35,
+  valorTotal: 1_149_317,
+  valorTotalMoM: 1_523_293,
+  valorTotalVar: -24.80,
+  valorAcima90d: 577_498,
+  valorAcima90dMoM: 806_532,
+  valorAcima90dVar: -28.40,
+  // Estoque por local (KG e R$) — fora do prazo vs no prazo
+  byLocal: [
+    { local: "Fábrica Suzano", kgForaPrazo: 124_000, kgNoPrazo: 0, valorForaPrazo: 413_000, valorNoPrazo: 0 },
+    { local: "Fábrica Limeira", kgForaPrazo: 107_000, kgNoPrazo: 0, valorForaPrazo: 322_000, valorNoPrazo: 0 },
+    { local: "CD Pinhais", kgForaPrazo: 50_000, kgNoPrazo: 0, valorForaPrazo: 182_000, valorNoPrazo: 0 },
+    { local: "CD Serra", kgForaPrazo: 64_000, kgNoPrazo: 0, valorForaPrazo: 158_000, valorNoPrazo: 0 },
+    { local: "CDL Fortaleza", kgForaPrazo: 29_000, kgNoPrazo: 0, valorForaPrazo: 74_000, valorNoPrazo: 0 },
+  ],
+  // Estoque disponível KG por mês (stacked: fora do prazo + no prazo)
+  monthlyKg: [
+    { month: "Mar/25", foraPrazo: 148_000, noPrazo: 100_000 },
+    { month: "Abr/25", foraPrazo: 173_000, noPrazo: 42_000 },
+    { month: "Mai/25", foraPrazo: 175_000, noPrazo: 73_000 },
+    { month: "Jun/25", foraPrazo: 97_000, noPrazo: 118_000 },
+    { month: "Jul/25", foraPrazo: 192_000, noPrazo: 56_000 },
+    { month: "Ago/25", foraPrazo: 219_000, noPrazo: 29_000 },
+    { month: "Set/25", foraPrazo: 136_000, noPrazo: 83_000 },
+    { month: "Out/25", foraPrazo: 148_000, noPrazo: 67_000 },
+    { month: "Nov/25", foraPrazo: 128_000, noPrazo: 87_000 },
+    { month: "Dez/25", foraPrazo: 115_000, noPrazo: 100_000 },
+    { month: "Jan/26", foraPrazo: 138_000, noPrazo: 77_000 },
+    { month: "Fev/26", foraPrazo: 125_000, noPrazo: 90_000 },
+  ],
+  // Valor do estoque por mês (stacked)
+  monthlyValor: [
+    { month: "Mar/25", foraPrazo: 484_000, noPrazo: 165_000 },
+    { month: "Abr/25", foraPrazo: 544_000, noPrazo: 89_000 },
+    { month: "Mai/25", foraPrazo: 619_000, noPrazo: 130_000 },
+    { month: "Jun/25", foraPrazo: 751_000, noPrazo: 98_000 },
+    { month: "Jul/25", foraPrazo: 596_000, noPrazo: 126_000 },
+    { month: "Ago/25", foraPrazo: 807_000, noPrazo: 120_000 },
+    { month: "Set/25", foraPrazo: 572_000, noPrazo: 150_000 },
+    { month: "Out/25", foraPrazo: 610_000, noPrazo: 112_000 },
+    { month: "Nov/25", foraPrazo: 577_000, noPrazo: 145_000 },
+    { month: "Dez/25", foraPrazo: 490_000, noPrazo: 132_000 },
+    { month: "Jan/26", foraPrazo: 520_000, noPrazo: 103_000 },
+    { month: "Fev/26", foraPrazo: 480_000, noPrazo: 118_000 },
+  ],
+  // Evolução No Prazo x Fora do Prazo (KG — linha)
+  evolutionKg: [
+    { month: "Mar/25", foraPrazo: 120_000, noPrazo: 164_000 },
+    { month: "Abr/25", foraPrazo: 115_000, noPrazo: 148_000 },
+    { month: "Mai/25", foraPrazo: 136_000, noPrazo: 130_000 },
+    { month: "Jun/25", foraPrazo: 57_000, noPrazo: 173_000 },
+    { month: "Jul/25", foraPrazo: 215_000, noPrazo: 180_000 },
+    { month: "Ago/25", foraPrazo: 249_000, noPrazo: 170_000 },
+    { month: "Set/25", foraPrazo: 178_000, noPrazo: 192_000 },
+    { month: "Out/25", foraPrazo: 163_000, noPrazo: 143_000 },
+    { month: "Nov/25", foraPrazo: 141_000, noPrazo: 128_000 },
+  ],
+  // Highlights
+  highlights: [
+    "R$ 1,15 MM de valor total em TPEC, representando redução de -24,80% vs mês anterior, refletindo baixa e tratamento de saldos no período.",
+    "Redução do estoque total para 375 mil kg, indicando avanço no saneamento geral dos materiais em TPEC.",
+    "Redução relevante do valor acima de 90 dias, que passou de R$ 806 mil para R$ 577 mil, demonstrando evolução no tratamento do estoque crítico.",
+  ],
+  // Ações pendentes
+  actions: [
+    "107 toneladas em Limeira aguardando aprovação do jurídico para baixa.",
+    "Na Fábrica Suzano, sinistro da SuzanLog já comunicado via e-mail de cobrança, aguardando retorno até 23/03.",
+    "Em CD Pinhais, sinistro aguardando aprovação para baixa.",
   ],
 };
 
